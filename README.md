@@ -1,3 +1,3 @@
 # TowerDefenceGame
 
-#protect carrots
+protect carrots

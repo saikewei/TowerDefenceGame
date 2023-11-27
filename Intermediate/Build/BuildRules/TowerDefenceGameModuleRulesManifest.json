@@ -1,8 +1,0 @@
-{
-	"SourceFiles": [
-		"E:\\UEproject\\TowerDefenceGame\\Source\\TowerDefenceGame\\TowerDefenceGame.Build.cs",
-		"E:\\UEproject\\TowerDefenceGame\\Source\\TowerDefenceGame.Target.cs",
-		"E:\\UEproject\\TowerDefenceGame\\Source\\TowerDefenceGameEditor.Target.cs"
-	],
-	"EngineVersion": "5.3.2"
-}

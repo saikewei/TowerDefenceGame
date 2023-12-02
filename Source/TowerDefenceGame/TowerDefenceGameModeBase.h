@@ -19,7 +19,6 @@ class TOWERDEFENCEGAME_API ATowerDefenceGameModeBase : public AGameModeBase
 
 protected:
 	//在游戏开始时调用
-	UFUNCTION(BlueprintCallable, Category = "UI_Start")
 	virtual void BeginPlay() override;
 
 	//每一个tick调用

@@ -24,8 +24,14 @@ public:
 	//传入本关卡销毁位置
 	void SetEndLocation(const FVector& End);
 
+	//在游戏开始时调用
+	virtual void BeginPlay() override;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Damage") 
+	void GetDamage(float Damage);
 
 protected:
 	//本角色所跟随的路径
@@ -40,4 +46,12 @@ protected:
 
 	//销毁位置
 	FVector EndLoaction;
+
+	//怪物血量
+	UPROPERTY(EditAnywhere)
+	float HP;
+
+	//血条组件
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
+	//class UWidgetComponent* InfoWidgetComponent;
 };

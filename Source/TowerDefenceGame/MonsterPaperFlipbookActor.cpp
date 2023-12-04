@@ -3,6 +3,7 @@
 
 #include "MonsterPaperFlipbookActor.h"
 #include "Components/SplineComponent.h"
+#include "Components/WidgetComponent.h"
 
 AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 {
@@ -12,6 +13,10 @@ AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 	MyPath = nullptr;
 	MovingSpeed = 300.f;
 	CurrentLocation = 0;
+
+	//初始化血条组件
+	//InfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InfoWidgetComponent"));
+	//InfoWidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
@@ -23,6 +28,12 @@ void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
 void AMonsterPaperFlipbookActor::SetEndLocation(const FVector& End)
 {
 	EndLoaction = End;
+}
+
+void AMonsterPaperFlipbookActor::BeginPlay()
+{
+	Super::BeginPlay();
+	//auto InfoWidgetClass = LoadClass<UUserWidget>(NULL, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/BP_MonsterHPBar.BP_MonsterHPBar_C'"));
 }
 
 void AMonsterPaperFlipbookActor::Tick(float DeltaTime)
@@ -44,5 +55,14 @@ void AMonsterPaperFlipbookActor::Tick(float DeltaTime)
 			 }
 		}
 		SetActorLocation(NewLocation);
+	}
+}
+
+void AMonsterPaperFlipbookActor::GetDamage(float Damage)
+{
+	HP -= Damage;
+	if (HP <= 0)
+	{
+		Destroy();
 	}
 }

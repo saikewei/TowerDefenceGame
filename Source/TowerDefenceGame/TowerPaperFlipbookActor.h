@@ -33,9 +33,6 @@ public:
 	// 选择目标怪物
 	AMonsterPaperFlipbookActor* ChooseTargetMonster();
 
-	//转向目标怪物
-	void RotateToTarget();
-
 	//向目标攻击
 	void FireAtTarget();
 
@@ -66,4 +63,8 @@ protected:
 
 	// 定时器句柄
 	FTimerHandle TimerHandle_FireRate;
+
+	//防御塔旋转方向
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	FRotator TowerRotation;
 };

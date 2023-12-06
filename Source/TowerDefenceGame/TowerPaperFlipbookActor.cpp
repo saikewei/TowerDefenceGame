@@ -18,12 +18,17 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 
 	// 设置发射频率
 	FireRate = 0.2f; // 每0.2秒发射一次
+
+	//调整防御塔方向
+	TowerRotation = GetActorRotation();
+	TowerRotation.Roll -= 90.0;
+	SetActorRotation(TowerRotation);
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	RotateToTarget();
+	ChooseTargetMonster();
 }
 
 void ATowerPaperFlipbookActor::BeginPlay()
@@ -75,18 +80,7 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 	return TargetMonster;
 }
 
-void ATowerPaperFlipbookActor::RotateToTarget()
-{
-	// 选择目标怪物
-	AMonsterPaperFlipbookActor* Target = ChooseTargetMonster();
-	if (Target)
-	{
-		// 计算新的朝向
-		FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-		FRotator NewRotation = FRotationMatrix::MakeFromZ(Direction).Rotator();
-		SetActorRotation(NewRotation);
-	}
-}
+
 
 void ATowerPaperFlipbookActor::FireAtTarget()
 {

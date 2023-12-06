@@ -38,4 +38,5 @@ protected:
 	//本关卡的路径
 	UPROPERTY(EditAnywhere)
 	UClass* Path;
+
 };

@@ -28,4 +28,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION(BlueprintCallable, category = "Damage")
+	void GetDamage(float Damage);
 };

@@ -48,10 +48,15 @@ protected:
 	FVector EndLoaction;
 
 	//怪物血量
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
 	float HP;
 
-	//血条组件
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Info, meta = (AllowPrivateAccess = "true"))
-	//class UWidgetComponent* InfoWidgetComponent;
+	//怪物血量上限
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
+	float MAX_HP;
+
+	//对萝卜造成的伤害
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
+	float DamageForCarrot;
+
 };

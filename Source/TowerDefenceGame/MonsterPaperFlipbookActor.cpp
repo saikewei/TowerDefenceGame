@@ -13,10 +13,7 @@ AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 	MyPath = nullptr;
 	MovingSpeed = 300.f;
 	CurrentLocation = 0;
-
-	//初始化血条组件
-	//InfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InfoWidgetComponent"));
-	//InfoWidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	HP = MAX_HP;
 }
 
 void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
@@ -33,7 +30,6 @@ void AMonsterPaperFlipbookActor::SetEndLocation(const FVector& End)
 void AMonsterPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
-	//auto InfoWidgetClass = LoadClass<UUserWidget>(NULL, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/BP_MonsterHPBar.BP_MonsterHPBar_C'"));
 }
 
 void AMonsterPaperFlipbookActor::Tick(float DeltaTime)

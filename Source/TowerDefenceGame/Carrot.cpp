@@ -29,6 +29,15 @@ void ACarrot::Tick(float DeltaTime)
 
 }
 
+void ACarrot::GetDamage(float Damage)
+{
+	CarrotHealth -= Damage;
+	if (CarrotHealth < 0)
+	{
+		CarrotHealth = 0;
+	}
+}
+
 void ACarrot::TakeDamage(float DamageAmount)
 {
 	// ¼õÑª

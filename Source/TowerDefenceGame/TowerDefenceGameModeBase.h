@@ -39,4 +39,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UClass* Path;
 
+	//HUD×é¼þ
+	UPROPERTY(EditAnywhere, Category = "UI HUD")
+	TSubclassOf<UUserWidget> HUD_Class;
+	UUserWidget* HUDWidget;
 };

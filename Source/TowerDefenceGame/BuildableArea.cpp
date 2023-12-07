@@ -9,21 +9,8 @@ ABuildableArea::ABuildableArea()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-}
-
-void ABuildableArea::SetShutDownOthers()
-{
-	ShutDownOthers = true;
-}
-
-void ABuildableArea::RecoverShutDownOthers()
-{
-	ShutDownOthers = false;
-}
-
-bool ABuildableArea::GetShutDownOthers()
-{
-	return ShutDownOthers;
+	//初始防御塔建造花费
+	TowerCost = 100;
 }
 
 // Called when the game starts or when spawned

@@ -29,6 +29,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	//获得给萝卜的伤害
 	UFUNCTION(BlueprintCallable, category = "Damage")
 	void GetDamage(float Damage);
 };

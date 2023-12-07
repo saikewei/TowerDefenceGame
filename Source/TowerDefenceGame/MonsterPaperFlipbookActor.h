@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage") 
 	void GetDamage(float Damage);
 
+	UFUNCTION(BlueprintCallable, Category = "Bonus")
+	int32 GetBonus()const;
+
 protected:
 	//本角色所跟随的路径
 	const USplineComponent* MyPath;
@@ -58,5 +61,8 @@ protected:
 	//对萝卜造成的伤害
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	float DamageForCarrot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bonus")
+	int32 KillBonus;
 
 };

@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "SplinePathActor.h"
+#include "Blueprint/UserWidget.h"
 
 void ATowerDefenceGameModeBase::BeginPlay()
 {
@@ -22,6 +23,14 @@ void ATowerDefenceGameModeBase::BeginPlay()
 	//设置定时器，定时刷新怪物
 	FTimerHandle SpawnHandle;
 	GetWorldTimerManager().SetTimer(SpawnHandle, this, &ATowerDefenceGameModeBase::SpawnMonster, FMath::RandRange(2, 5), true);
+
+	//初始化HUD组件
+	if (HUD_Class != nullptr)
+	{
+		HUDWidget = CreateWidget(GetWorld(), HUD_Class);
+		HUDWidget->AddToViewport();
+		//UE_LOG(LogTemp, Warning, TEXT("initialize HUD!"));
+	}
 }
 
 void ATowerDefenceGameModeBase::Tick(float DeltaTime)

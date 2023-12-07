@@ -29,6 +29,7 @@ void ACarrot::Tick(float DeltaTime)
 
 }
 
+//获得给萝卜的伤害
 void ACarrot::GetDamage(float Damage)
 {
 	CarrotHealth -= Damage;

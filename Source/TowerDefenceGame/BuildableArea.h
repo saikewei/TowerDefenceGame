@@ -15,26 +15,17 @@ public:
 	// Sets default values for this actor's properties
 	ABuildableArea();
 
-	UFUNCTION(BlueprintCallable, Category = "Mutex")
-	void SetShutDownOthers();
-
-	UFUNCTION(BlueprintCallable, Category = "Mutex")
-	void RecoverShutDownOthers();
-
-	UFUNCTION(BlueprintCallable, Category = "Mutex")
-	bool GetShutDownOthers();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	static bool ShutDownOthers;
+	//初始防御塔建造花费
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 TowerCost;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };
-
-//初始化静态成员
-bool ABuildableArea::ShutDownOthers = false;

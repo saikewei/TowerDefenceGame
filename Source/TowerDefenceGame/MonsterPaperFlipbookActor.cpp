@@ -4,6 +4,8 @@
 #include "MonsterPaperFlipbookActor.h"
 #include "Components/SplineComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "ToweDefenceGameState.h"
 
 AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 {
@@ -59,6 +61,17 @@ void AMonsterPaperFlipbookActor::GetDamage(float Damage)
 	HP -= Damage;
 	if (HP <= 0)
 	{
+		//获得当前游戏状态
+		AToweDefenceGameState* CurrentGameState = Cast<AToweDefenceGameState>(GetWorld()->GetGameState());
+		if (CurrentGameState)
+		{
+			CurrentGameState->AddMoney(KillBonus);
+		}
 		Destroy();
 	}
+}
+
+int32 AMonsterPaperFlipbookActor::GetBonus() const
+{
+	return KillBonus;
 }

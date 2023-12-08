@@ -55,5 +55,6 @@ void ATowerDefenceGameModeBase::SpawnMonster()
 	if (MySpline)
 	{
 		Monster->SetPath(MySpline->GetSplinePath());
+		
 	}
 }

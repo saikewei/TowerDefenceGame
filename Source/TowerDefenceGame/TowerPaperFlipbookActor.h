@@ -7,6 +7,7 @@
 #include "PaperFlipbookActor.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "Components/SphereComponent.h"
+#include "PaperFlipbookComponent.h"
 #include "TowerPaperFlipbookActor.generated.h"
 
 /**
@@ -36,6 +37,12 @@ public:
 	//向目标攻击
 	void FireAtTarget();
 
+	//升级防御塔
+	void UpgradeTower();
+
+	//售出防御塔
+	void SellTower();
+
 protected:
 	//防御塔攻击半径
 	UPROPERTY(EditAnywhere, Category = "Basic")
@@ -49,7 +56,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Detection")
 	TArray<AMonsterPaperFlipbookActor*> MonstersInRange;
 
-	//目标怪物
+	// 目标怪物
 	UPROPERTY(BlueprintReadWrite, Category = "Detection")
 	AMonsterPaperFlipbookActor* TargetMonster = nullptr;
 
@@ -64,7 +71,35 @@ protected:
 	// 定时器句柄
 	FTimerHandle TimerHandle_FireRate;
 
-	//防御塔旋转方向
+	// 防御塔旋转方向
 	UPROPERTY(EditAnywhere, Category = "Rotation")
 	FRotator TowerRotation;
+
+	// 防御塔类
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPaperFlipbookComponent* TowerFlipbook;
+
+	// 不同等级防御塔外观数组
+	UPROPERTY(EditDefaultsOnly, Category = "Tower")
+	TArray<UPaperFlipbook*> TowerLevelsFlipbooks;
+
+	// 当前防御塔的级别
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower")
+	int32 CurrentLevel = 0;
+
+	UPROPERTY(EditAnywhere,Category="LevelCost")
+	int32 LevelOneCost = 0;
+
+	UPROPERTY(EditAnywhere, Category = "LevelCost")
+	int32 LevelTwoCost = 0;
+
+	UPROPERTY(EditAnywhere, Category = "SellAmount")
+	int32 LevelZeroSold = 0;
+
+	UPROPERTY(EditAnywhere, Category = "SellAmount")
+	int32 LevelOneSold = 0;
+
+	UPROPERTY(EditAnywhere, Category = "SellAmount")
+	int32 LevelTwoSold = 0;
+
 };

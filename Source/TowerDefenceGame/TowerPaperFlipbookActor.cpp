@@ -2,6 +2,7 @@
 
 #include "TowerPaperFlipbookActor.h"
 
+const int MaxLevel = 2;
 
 ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 {
@@ -17,13 +18,20 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
 	UE_LOG(LogTemp, Warning, TEXT("Constructed!"));
 
-	// 设置发射频率
+	//设置发射频率
 	FireRate = 0.2f; // 每0.2秒发射一次
 
 	//调整防御塔方向
 	TowerRotation = GetActorRotation();
 	TowerRotation.Roll -= 90.0;
 	SetActorRotation(TowerRotation);
+
+	//设置动画组件
+	TowerFlipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("TowerFlipbook"));
+	TowerFlipbook->SetupAttachment(RootComponent);
+
+	//初始化等级
+	CurrentLevel = 0;
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
@@ -96,4 +104,30 @@ void ATowerPaperFlipbookActor::FireAtTarget()
 		}
 	}
 }
+
+void ATowerPaperFlipbookActor::UpgradeTower()
+{
+	if (CurrentLevel < MaxLevel)
+	{
+		CurrentLevel++;
+		// 更新防御塔属性：攻击力、攻击范围、攻击间隔等
+		AttackRange += 200.f;
+		if (FireRate >= 0.01f)
+		{
+			FireRate -= 0.05f;
+		}
+
+		// 更换防御塔的外观
+		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel))
+		{
+			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel - 1]);
+		}
+	}
+}
+
+void ATowerPaperFlipbookActor::SellTower()
+{
+
+}
+
 

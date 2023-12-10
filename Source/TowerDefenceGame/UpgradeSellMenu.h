@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Components/Button.h"
 #include "Blueprint/UserWidget.h"
-#include "TowerPaperFlipbookActor.h"
 #include "UpgradeSellMenu.generated.h"
 
 /**
  * 
  */
 class UButton;
+class ATowerPaperFlipbookActor;
 
 UCLASS()
 class TOWERDEFENCEGAME_API UUpgradeSellMenu : public UUserWidget
@@ -21,23 +21,56 @@ public:
 	// 初始化函数
 	virtual void NativeConstruct() override;
 
+	// 设置按钮可见性函数
+	void SetButtonVisibility();
+
 	// 升级按钮
 	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeBtn;
+	UButton* UpgradeBtnL1;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* UpgradeBtnL2;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* UpgradeBtnL3;
 
 	// 售出按钮
 	UPROPERTY(meta = (BindWidget))
-	UButton* SellBtn;
+	UButton* SellBtnL1;
 
-	// 其对应塔基的指针
+	UPROPERTY(meta = (BindWidget))
+	UButton* SellBtnL2;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SellBtnL3;
+
+	// 其对应防御塔的指针
 	UPROPERTY(EditAnywhere, Category = "Menu")
 	ATowerPaperFlipbookActor* TargetTower;
+
+	// 生成位置
+	UPROPERTY(EditAnywhere, Category = "Menu")
+	FVector BuildLocation;
 
 protected:
 	// 点击升级事件
 	UFUNCTION()
-	void OnClickUpgradeBtn();
+	void OnClickUpgradeBtnL1();
+
+	UFUNCTION()
+	void OnClickUpgradeBtnL2();
 
 	// 点击售出事件
-	void OnClickSellBtn();
+	UFUNCTION()
+	void OnClickSellBtnL1();
+
+	UFUNCTION()
+	void OnClickSellBtnL2();
+
+	UFUNCTION()
+	void OnClickSellBtnL3();
+
+	
+	
+	
 };

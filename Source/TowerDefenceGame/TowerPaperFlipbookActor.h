@@ -7,12 +7,17 @@
 #include "PaperFlipbookActor.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "PaperFlipbookComponent.h"
+#include "UpgradeSellMenu.h"
+#include "ToweDefenceGameState.h"
 #include "TowerPaperFlipbookActor.generated.h"
 
 /**
  *
  */
+class UButton;
+class ATowerBase;
 UCLASS()
 class TOWERDEFENCEGAME_API ATowerPaperFlipbookActor : public APaperFlipbookActor
 {
@@ -43,6 +48,27 @@ public:
 	//售出防御塔
 	void SellTower();
 
+	// 处理点击事件
+	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
+
+	// 设置自身UI可见
+	void SetSelfVisibility(bool Visible);
+
+	// 设置其他UI不可见
+	void SetOthersInvisible();
+
+	// 当前防御塔的级别
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tower")
+	int32 CurrentLevel = 0;
+
+	// 防御塔升级费用
+	UPROPERTY(EditAnywhere, Category = "LevelCost")
+	TArray<int32>UpgradeCost;
+
+	// 防御塔出售费用
+	UPROPERTY(EditAnywhere, Category = "LevelCost")
+	TArray<int32>SellCost;
+
 protected:
 	//防御塔攻击半径
 	UPROPERTY(EditAnywhere, Category = "Basic")
@@ -51,6 +77,10 @@ protected:
 	//定义碰撞体
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* DetectionSphere;
+
+	////定义盒体碰撞体
+	//UPROPERTY(EditAnywhere, Category = "Components")
+	//UBoxComponent* CollisionBox;
 
 	// 怪物列表
 	UPROPERTY(BlueprintReadWrite, Category = "Detection")
@@ -65,7 +95,7 @@ protected:
 	TSubclassOf<ABullet> BulletClass;
 
 	// 子弹发射的时间间隔
-	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
+	UPROPERTY(EditAnywhere, Category = "Shooting")
 	float FireRate;
 
 	// 定时器句柄
@@ -83,23 +113,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Tower")
 	TArray<UPaperFlipbook*> TowerLevelsFlipbooks;
 
-	// 当前防御塔的级别
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower")
-	int32 CurrentLevel = 0;
+	UPROPERTY(EditAnywhere,Category="Tower")
+	bool IsVisible;
 
-	UPROPERTY(EditAnywhere,Category="LevelCost")
-	int32 LevelOneCost = 0;
+	// 蓝图UI类
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUpgradeSellMenu> UpgradeSellMenuBlueprintClass;
 
-	UPROPERTY(EditAnywhere, Category = "LevelCost")
-	int32 LevelTwoCost = 0;
-
-	UPROPERTY(EditAnywhere, Category = "SellAmount")
-	int32 LevelZeroSold = 0;
-
-	UPROPERTY(EditAnywhere, Category = "SellAmount")
-	int32 LevelOneSold = 0;
-
-	UPROPERTY(EditAnywhere, Category = "SellAmount")
-	int32 LevelTwoSold = 0;
+	// 创建指向菜单的指针
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tower")
+	UUpgradeSellMenu* Menu;
 
 };

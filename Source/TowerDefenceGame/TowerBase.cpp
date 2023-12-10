@@ -52,11 +52,6 @@ void ATowerBase::SetOtherBasesInvisible()
 void ATowerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// 在每一帧都检测塔基是否有防御塔并更新状态
-	if (Menu)
-	{
-		IsTower = Menu->HasTower;
-	}
 }
 
 

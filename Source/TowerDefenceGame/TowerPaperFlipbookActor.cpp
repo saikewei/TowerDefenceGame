@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "TowerPaperFlipbookActor.h"
+#include "TowerBase.h"
 
 const int MaxLevel = 2;
 
@@ -12,6 +14,10 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	DetectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DetectionSphere"));
 	DetectionSphere->SetupAttachment(RootComponent);
 	DetectionSphere->SetSphereRadius(AttackRange);
+
+	//// 添加盒体碰撞体，用于检测鼠标
+	//CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	//CollisionBox->SetupAttachment(RootComponent);
 
 	// 绑定触发事件
 	DetectionSphere->OnComponentBeginOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
@@ -32,6 +38,9 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 
 	//初始化等级
 	CurrentLevel = 0;
+
+	IsVisible = false;
+	Menu = nullptr;
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
@@ -114,20 +123,88 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 		AttackRange += 200.f;
 		if (FireRate >= 0.01f)
 		{
-			FireRate -= 0.05f;
+			FireRate -= 0.1f;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
 		}
-
+		//UE_LOG(LogTemp, Warning, TEXT("CLevel:%d"), CurrentLevel);
 		// 更换防御塔的外观
-		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel))
+		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel - 1) && CurrentLevel - 1 >= 0)
 		{
 			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel - 1]);
+			//UE_LOG(LogTemp, Warning, TEXT("Level:%d"), CurrentLevel);
+		}
+
+		// 花费金币
+		AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
+		if (CurrentLevel - 1 >= 0)
+		{
+			GameState->AddMoney(-UpgradeCost[CurrentLevel - 1]);
 		}
 	}
 }
 
 void ATowerPaperFlipbookActor::SellTower()
 {
+	// 返还金币
+	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
+	GameState->AddMoney(SellCost[CurrentLevel]);
+	// 销毁防御塔
+	this->Destroy();
+}
 
+void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	this->SetSelfVisibility(!IsVisible);
+	IsVisible = !IsVisible;
+	SetOthersInvisible();
+	UE_LOG(LogTemp, Warning, TEXT("Click"));
+}
+
+void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
+{
+	if (!Visible)
+	{
+		// 删除菜单
+		if (Menu)
+		{
+			Menu->RemoveFromParent();
+		}
+		return;
+	}
+	else
+	{
+		// 创建菜单并生成到对应的位置
+		Menu = CreateWidget<UUpgradeSellMenu>(GetWorld(), UpgradeSellMenuBlueprintClass);
+		if (Menu)
+		{
+			Menu->TargetTower = this;
+			// 获取玩家控制器
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			FVector2D Position;
+			Menu->BuildLocation = GetActorLocation();
+			PlayerController->ProjectWorldLocationToScreen(Menu->BuildLocation, Position);
+			Menu->AddToViewport();
+			Menu->SetPositionInViewport(Position);
+			UE_LOG(LogTemp, Warning, TEXT("Add!"));
+		}
+		return;
+	}
+}
+
+void ATowerPaperFlipbookActor::SetOthersInvisible()
+{
+	// 获取关卡中所有的防御塔，并将除自身外的防御塔UI设置为不可见
+	UWorld* World = GetWorld();
+	TArray<AActor*> Towers;
+	UGameplayStatics::GetAllActorsOfClass(World, ATowerPaperFlipbookActor::StaticClass(), Towers);
+	for (AActor* Tower : Towers)
+	{
+		ATowerPaperFlipbookActor* Temp = Cast<ATowerPaperFlipbookActor>(Tower);
+		if (Temp != this)
+		{
+			Temp->SetSelfVisibility(false);
+		}
+	}
 }
 
 

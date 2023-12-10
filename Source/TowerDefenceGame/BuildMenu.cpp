@@ -10,7 +10,6 @@ void UBuildMenu::NativeConstruct()
 	Super::NativeConstruct();
 	// 获取GameState
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
-	HasTower = false;
 	// 绑定点击事件
 	TBottleBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTBottleBtn);
 	if (GameState->GetMoney() < BottleCost)
@@ -28,10 +27,10 @@ void UBuildMenu::ClickTBottleBtn()
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 	UWorld* World = GetWorld();
 	FRotator Rotation = FRotator(0, 0, 0);
-	World->SpawnActor<ATBottle>(Bottle, BuildLocation, Rotation);
+	Tower = World->SpawnActor<ATBottle>(Bottle, BuildLocation, Rotation);
 	UE_LOG(LogTemp, Warning, TEXT("Spawn"));
 	this->RemoveFromParent();
 	TargetBase->ToggleSignVsibility(false);
-	HasTower = true;
+	TargetBase->IsPlusSign = false;
 	GameState->AddMoney(-BottleCost);
 }

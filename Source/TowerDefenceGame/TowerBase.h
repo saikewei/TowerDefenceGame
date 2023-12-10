@@ -11,6 +11,7 @@
 // 前向声明
 class UBuildMenu;
 class WB_BuildMenuWidget;
+class ATowerPaperFlipbookActor;
 
 UCLASS()
 class TOWERDEFENCEGAME_API ATowerBase : public AActor
@@ -31,10 +32,6 @@ protected:
 	// 该位置是否存在防御塔
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerBase")
 	bool IsTower;
-
-	// 该位置是否存在加号
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerBase")
-	bool IsPlusSign;
 
 	// 处理点击事件
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
@@ -57,8 +54,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UBoxComponent* CollisionBox;
 
+	// 蓝图UI类
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UBuildMenu> BuildMenuBlueprintClass;
 
+	// 该位置是否存在加号
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerBase")
+	bool IsPlusSign;
 
 };

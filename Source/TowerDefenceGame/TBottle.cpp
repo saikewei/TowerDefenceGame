@@ -9,11 +9,11 @@ ATBottle::ATBottle()
 	PrimaryActorTick.bCanEverTick = true;
 	//设置相关金额
 	BuildCost = 100;
-	LevelOneCost = 180;
-	LevelZeroSold = 80;
-	LevelTwoCost = 260;
-	LevelOneSold = 224;
-	LevelTwoSold = 432;
+	UpgradeCost.Add(180);
+	UpgradeCost.Add(260);
+	SellCost.Add(80);
+	SellCost.Add(224);
+	SellCost.Add(432);
 }
 
 void ATBottle::RotateToTarget()

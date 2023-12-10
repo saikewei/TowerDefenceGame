@@ -26,10 +26,6 @@ public:
 	//初始化函数
 	virtual void NativeConstruct() override;
 
-	// 是否存在防御塔
-	UPROPERTY(EditAnywhere, Category = "BuildMenu")
-	bool HasTower;
-
 	// 生成位置
 	UPROPERTY(EditAnywhere, Category = "BuildMenu")
 	FVector BuildLocation;
@@ -37,6 +33,10 @@ public:
 	// 其对应塔基的指针
 	UPROPERTY(EditAnywhere, Category = "BuildMenu")
 	ATowerBase* TargetBase;
+
+	//指向防御塔的指针
+	UPROPERTY(EditAnywhere, Category = "BuildMenu")
+	ATowerPaperFlipbookActor* Tower;
 
 	// 建造瓶子塔的按钮
 	UPROPERTY(meta = (BindWidget))

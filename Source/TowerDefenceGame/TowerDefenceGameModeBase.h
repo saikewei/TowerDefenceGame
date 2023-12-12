@@ -16,6 +16,12 @@ UCLASS()
 class TOWERDEFENCEGAME_API ATowerDefenceGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+public:
+	//打开暂停菜单
+	void OpenPauseMenu();
+
+	//游戏失败
+	void GameLost();
 
 protected:
 	//在游戏开始时调用
@@ -43,4 +49,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "UI HUD")
 	TSubclassOf<UUserWidget> HUD_Class;
 	UUserWidget* HUDWidget;
+
+	//暂停菜单组件
+	UPROPERTY(EditAnywhere, Category = "PauseMenu")
+	TSubclassOf<UUserWidget> PauseMenu_Class;
+	UUserWidget* PauseMenuWidget;
+
+	//游戏失败菜单组件
+	UPROPERTY(EditAnywhere, Category = "GameLostMenu")
+	TSubclassOf<UUserWidget> GameLostMenu_Class;
+	UUserWidget* GameLostMenuWidget;
 };

@@ -5,7 +5,31 @@
 #include "Kismet/GameplayStatics.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "SplinePathActor.h"
+#include "TowerBase.h"
 #include "Blueprint/UserWidget.h"
+
+void ATowerDefenceGameModeBase::OpenPauseMenu()
+{
+	if (PauseMenu_Class != nullptr)
+	{
+		//创建菜单组件
+		PauseMenuWidget = CreateWidget(GetWorld(), PauseMenu_Class);
+		PauseMenuWidget->AddToViewport();
+	}
+}
+
+void ATowerDefenceGameModeBase::GameLost()
+{
+	if(GameLostMenu_Class != nullptr)
+	{
+		//创建菜单组件
+		GameLostMenuWidget = CreateWidget(GetWorld(), GameLostMenu_Class);
+		GameLostMenuWidget->AddToViewport();
+	}
+
+	//暂停游戏
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+}
 
 void ATowerDefenceGameModeBase::BeginPlay()
 {
@@ -29,8 +53,11 @@ void ATowerDefenceGameModeBase::BeginPlay()
 	{
 		HUDWidget = CreateWidget(GetWorld(), HUD_Class);
 		HUDWidget->AddToViewport();
+
 		//UE_LOG(LogTemp, Warning, TEXT("initialize HUD!"));
 	}
+
+	//OpenPauseMenu();
 }
 
 void ATowerDefenceGameModeBase::Tick(float DeltaTime)

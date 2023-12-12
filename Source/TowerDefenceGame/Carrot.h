@@ -16,14 +16,14 @@ public:
 	ACarrot();
 
 	UFUNCTION()
-		void TakeDamage(float DamageAmount);
+	void TakeDamage(float DamageAmount);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Carrot")
-		float CarrotHealth; // ÂÜ²·ÑªÁ¿
+	float CarrotHealth; // ÂÜ²·ÑªÁ¿
 
 public:
 	// Called every frame

@@ -62,4 +62,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerBase")
 	bool IsPlusSign;
 
+	//设置该塔基是否有防御塔
+	void SetIsTower(bool NewIsTower);
+
 };

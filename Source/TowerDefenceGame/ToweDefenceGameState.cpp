@@ -2,6 +2,12 @@
 
 
 #include "ToweDefenceGameState.h"
+#include "MonsterPaperFlipbookActor.h"
+
+AToweDefenceGameState::AToweDefenceGameState()
+{
+	CurrentAimedTarget = nullptr;
+}
 
 int32 AToweDefenceGameState::GetMoney() const
 {
@@ -16,4 +22,14 @@ bool AToweDefenceGameState::AddMoney(int32 MoneyToAdd)
 		return true;
 	}
 	return false;
+}
+
+void AToweDefenceGameState::SetAimedTarget(AMonsterPaperFlipbookActor* const Target)
+{
+	CurrentAimedTarget = Target;
+}
+
+AMonsterPaperFlipbookActor* AToweDefenceGameState::GetAimedTarget() const
+{
+	return CurrentAimedTarget;
 }

@@ -5,6 +5,9 @@
 #include "Components/SplineComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/BoxComponent.h"
+#include "ToweDefenceGameState.h"
 #include "ToweDefenceGameState.h"
 
 AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
@@ -12,10 +15,14 @@ AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+	// 初始化碰撞组件
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	CollisionBox->SetupAttachment(RootComponent);
+
 	MyPath = nullptr;
 	MovingSpeed = 300.f;
 	CurrentLocation = 0;
-	HP = MAX_HP;
+	IsAimed = false;
 }
 
 void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
@@ -24,14 +31,10 @@ void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
 	MyPath = Path;
 }
 
-void AMonsterPaperFlipbookActor::SetEndLocation(const FVector& End)
-{
-	EndLoaction = End;
-}
-
 void AMonsterPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
+	HP = MAX_HP;
 }
 
 void AMonsterPaperFlipbookActor::Tick(float DeltaTime)
@@ -74,4 +77,55 @@ void AMonsterPaperFlipbookActor::GetDamage(float Damage)
 int32 AMonsterPaperFlipbookActor::GetBonus() const
 {
 	return KillBonus;
+}
+
+void AMonsterPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	UE_LOG(LogTemp, Warning, TEXT("clicked"));
+	//被点击，反转锁定状态
+	ChangeIsAimed();
+}
+
+void AMonsterPaperFlipbookActor::ChangeIsAimed()
+{
+	//反转被锁定状态
+	IsAimed = !IsAimed;
+
+	//改变标记可视性
+	SetPinMarkVisibility(IsAimed);
+
+	AToweDefenceGameState* CurrentState = Cast<AToweDefenceGameState>(GetWorld()->GetGameState());
+
+	if (IsAimed)
+	{
+		//让其他被锁定的取消锁定
+		TArray<AActor*> OtherMonsters;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonsterPaperFlipbookActor::StaticClass(), OtherMonsters);
+		for (AActor* Monster : OtherMonsters)
+		{
+			AMonsterPaperFlipbookActor* CastMonster = Cast< AMonsterPaperFlipbookActor>(Monster);
+			if(CastMonster)
+			{
+				if (CastMonster != this && CastMonster->GetIsAimed())
+				{
+					CastMonster->ChangeIsAimed();
+				}
+			}
+		}
+		
+		//设置被锁定状态
+		CurrentState->SetAimedTarget(this);
+	}
+	else
+	{
+		if (CurrentState)
+		{
+			CurrentState->SetAimedTarget(nullptr);
+		}
+	}
+}
+
+bool AMonsterPaperFlipbookActor::GetIsAimed() const
+{
+	return IsAimed;
 }

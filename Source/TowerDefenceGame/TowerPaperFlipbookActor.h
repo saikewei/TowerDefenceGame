@@ -18,6 +18,7 @@
  */
 class UButton;
 class ATowerBase;
+
 UCLASS()
 class TOWERDEFENCEGAME_API ATowerPaperFlipbookActor : public APaperFlipbookActor
 {
@@ -29,12 +30,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void BeginPlay() override;
-
-	//检测怪物进入
-	void OnMonsterEnterDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	//检测怪物离开
-	void OnMonsterLeaveDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	// 选择目标怪物
 	AMonsterPaperFlipbookActor* ChooseTargetMonster();
@@ -56,6 +51,9 @@ public:
 
 	// 设置其他UI不可见
 	void SetOthersInvisible();
+
+	//设置当前塔的塔基
+	void SetMyBase(ATowerBase* const Base);
 
 	// 当前防御塔的级别
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tower")
@@ -88,7 +86,7 @@ protected:
 
 	// 目标怪物
 	UPROPERTY(BlueprintReadWrite, Category = "Detection")
-	AMonsterPaperFlipbookActor* TargetMonster = nullptr;
+	AMonsterPaperFlipbookActor* TargetMonster;
 
 	// 子弹类的引用
 	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
@@ -124,4 +122,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tower")
 	UUpgradeSellMenu* Menu;
 
+	//生成此塔的塔基
+	ATowerBase* MyBase;
 };

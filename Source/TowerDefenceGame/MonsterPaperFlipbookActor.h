@@ -7,7 +7,8 @@
 #include "MonsterPaperFlipbookActor.generated.h"
 
 class USplineComponent;
-
+class UUserwidget;
+class UBoxComponent;
 /**
  * 
  */
@@ -21,9 +22,6 @@ public:
 	//传入本关卡样条线路径
 	void SetPath(const USplineComponent* Path);
 
-	//传入本关卡销毁位置
-	void SetEndLocation(const FVector& End);
-
 	//在游戏开始时调用
 	virtual void BeginPlay() override;
 
@@ -36,9 +34,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Bonus")
 	int32 GetBonus()const;
 
+	//改变当前被锁定状态
+	void ChangeIsAimed();
+
+	//获得当前被锁定状态
+	bool GetIsAimed() const;
+
 protected:
 	//本角色所跟随的路径
 	const USplineComponent* MyPath;
+
+	//碰撞体
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UBoxComponent* CollisionBox;
 
 	//移动速度
 	UPROPERTY(EditAnywhere)
@@ -47,8 +55,8 @@ protected:
 	//当前在路径中的位置
 	float CurrentLocation;
 
-	//销毁位置
-	FVector EndLoaction;
+	//是否被锁定
+	bool IsAimed;
 
 	//怪物血量
 	UPROPERTY(BlueprintReadOnly, Category = "Health")
@@ -62,7 +70,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	float DamageForCarrot;
 
+	//击杀得到的金币奖励
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Bonus")
 	int32 KillBonus;
 
+	//设置点击事件
+	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
+
+	//设置头顶记号可见性
+	UFUNCTION(BlueprintImplementableEvent, Category = "Tower")
+	void SetPinMarkVisibility(bool IsVisable);
 };

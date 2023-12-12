@@ -28,6 +28,7 @@ void UBuildMenu::ClickTBottleBtn()
 	UWorld* World = GetWorld();
 	FRotator Rotation = FRotator(0, 0, 0);
 	Tower = World->SpawnActor<ATBottle>(Bottle, BuildLocation, Rotation);
+	Tower->SetMyBase(TargetBase);
 	UE_LOG(LogTemp, Warning, TEXT("Spawn"));
 	this->RemoveFromParent();
 	TargetBase->ToggleSignVsibility(false);

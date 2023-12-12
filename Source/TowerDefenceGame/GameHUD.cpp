@@ -4,6 +4,7 @@
 #include "GameHUD.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "TowerDefenceGameModeBase.h"
 
 bool UGameHUD::Initialize()
 {
@@ -17,6 +18,7 @@ bool UGameHUD::Initialize()
 	ResumeBtn->OnClicked.AddDynamic(this, &UGameHUD::ClickResumeBtn);
 	DoubleSpeedBtn->OnClicked.AddDynamic(this, &UGameHUD::ClickDoubleSpeedBtn);
 	RecoverSpeedBtn->OnClicked.AddDynamic(this, &UGameHUD::ClickRecoverSpeedBtn);
+	MenuBtn->OnClicked.AddDynamic(this, &UGameHUD::ClickMenuBtn);
 
 
 	//设定初始按钮
@@ -79,4 +81,13 @@ void UGameHUD::ClickRecoverSpeedBtn()
 	//更换按钮
 	RecoverSpeedBtn->SetVisibility(ESlateVisibility::Hidden);
 	DoubleSpeedBtn->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameHUD::ClickMenuBtn()
+{
+	ATowerDefenceGameModeBase* MyGameMode = GetWorld()->GetAuthGameMode<ATowerDefenceGameModeBase>();
+	if (MyGameMode)
+	{
+		MyGameMode->OpenPauseMenu();
+	}
 }

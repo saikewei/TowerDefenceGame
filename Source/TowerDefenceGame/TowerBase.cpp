@@ -88,3 +88,8 @@ void ATowerBase::SetBaseVisibility(bool Visible)
 	}
 }
 
+void ATowerBase::SetIsTower(bool NewIsTower)
+{
+	IsTower = NewIsTower;
+}
+

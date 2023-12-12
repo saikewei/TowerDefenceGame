@@ -2,6 +2,7 @@
 
 
 #include "Carrot.h"
+#include "TowerDefenceGameModeBase.h"
 
 // Sets default values
 ACarrot::ACarrot()
@@ -36,6 +37,7 @@ void ACarrot::GetDamage(float Damage)
 	if (CarrotHealth < 0)
 	{
 		CarrotHealth = 0;
+		GetWorld()->GetAuthGameMode<ATowerDefenceGameModeBase>()->GameLost();
 	}
 }
 

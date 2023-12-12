@@ -20,20 +20,29 @@ public:
 	//初始化函数
 	virtual bool Initialize()override;
 
+	
+
+protected:
 	//暂停按钮
 	UPROPERTY(meta = (BindWidget))
 	UButton* PauseBtn;
 
+	//继续按钮
 	UPROPERTY(meta = (BindWidget))
 	UButton* ResumeBtn;
 
+	//二倍速
 	UPROPERTY(meta = (BindWidget))
 	UButton* DoubleSpeedBtn;
 
+	//回到一倍速
 	UPROPERTY(meta = (BindWidget))
 	UButton* RecoverSpeedBtn;
 
-protected:
+	//菜单按钮
+	UPROPERTY(meta = (BindWidget))
+	UButton* MenuBtn;
+
 	//暂停按钮点击事件处理函数
 	UFUNCTION()
 	void ClickPauseBtn();
@@ -47,4 +56,7 @@ protected:
 
 	UFUNCTION()
 	void ClickRecoverSpeedBtn();
+
+	UFUNCTION()
+	void ClickMenuBtn();
 };

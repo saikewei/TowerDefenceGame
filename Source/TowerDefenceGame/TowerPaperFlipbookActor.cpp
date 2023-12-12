@@ -2,6 +2,7 @@
 
 
 #include "TowerPaperFlipbookActor.h"
+#include "ObstaclePaperFlipbookActor.h"
 #include "TowerBase.h"
 
 const int MaxLevel = 2;
@@ -19,9 +20,6 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	//CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	//CollisionBox->SetupAttachment(RootComponent);
 
-	// 绑定触发事件
-	DetectionSphere->OnComponentBeginOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
-	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
 	UE_LOG(LogTemp, Warning, TEXT("Constructed!"));
 
 	//设置发射频率
@@ -39,8 +37,12 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	//初始化等级
 	CurrentLevel = 0;
 
+	//初始化目标怪物指针
+	TargetMonster = nullptr;
+
 	IsVisible = false;
 	Menu = nullptr;
+	MyBase = nullptr;
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
@@ -56,35 +58,26 @@ void ATowerPaperFlipbookActor::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
 }
 
-void ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	AMonsterPaperFlipbookActor* MonsterActor = Cast<AMonsterPaperFlipbookActor>(OtherActor);
-	if (MonsterActor)
-	{
-		// 将怪物添加到列表中
-		MonstersInRange.AddUnique(MonsterActor);
-	}
-}
-
-void ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	AMonsterPaperFlipbookActor* MonsterActor = Cast<AMonsterPaperFlipbookActor>(OtherActor);
-	if (MonsterActor)
-	{
-		// 将怪物从列表中移除
-		MonstersInRange.Remove(MonsterActor);
-	}
-}
-
 AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 {
 	AMonsterPaperFlipbookActor* ClosestMonster = nullptr;
 	float MinDistance = MAX_FLT;
+	AToweDefenceGameState* CurrentState = Cast<AToweDefenceGameState>(GetWorld()->GetGameState());
+
+	// 首先看看有没有手动锁定的目标，目标是否在范围
+	if (CurrentState->GetAimedTarget() != nullptr)
+	{
+		if (MonstersInRange.Find(CurrentState->GetAimedTarget()) != INDEX_NONE)
+		{
+			TargetMonster = CurrentState->GetAimedTarget();
+			return TargetMonster;
+		}
+	}
 
 	// 遍历 MonstersInRange 数组，寻找最近的怪物
 	for (AMonsterPaperFlipbookActor* Monster : MonstersInRange)
 	{
-		if (Monster)
+		if (Monster && !Cast<AObstaclePaperFlipbookActor>(Monster))
 		{
 			float Distance = FVector::Dist(this->GetActorLocation(), Monster->GetActorLocation());
 			if (Distance < MinDistance)
@@ -94,6 +87,7 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 			}
 		}
 	}
+
 	TargetMonster = ClosestMonster;
 	return TargetMonster;
 }
@@ -148,6 +142,10 @@ void ATowerPaperFlipbookActor::SellTower()
 	// 返还金币
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 	GameState->AddMoney(SellCost[CurrentLevel]);
+	
+	//恢复塔基显示
+	MyBase->SetIsTower(false);
+
 	// 销毁防御塔
 	this->Destroy();
 }
@@ -205,6 +203,12 @@ void ATowerPaperFlipbookActor::SetOthersInvisible()
 			Temp->SetSelfVisibility(false);
 		}
 	}
+}
+
+void ATowerPaperFlipbookActor::SetMyBase(ATowerBase* const Base)
+{
+	MyBase = Base;
+	MyBase->SetIsTower(true);
 }
 
 

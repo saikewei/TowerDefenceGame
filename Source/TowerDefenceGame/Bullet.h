@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperFlipbookActor.h"
-#include "GameFramework/ProjectileMovementComponent.h"
+#include "PaperFlipbookComponent.h"
 #include "Components/BoxComponent.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,6 +14,8 @@
 /**
  * 
  */
+class ATowerPaperFlipbookActor;
+
 UCLASS()
 class TOWERDEFENCEGAME_API ABullet : public APaperFlipbookActor
 {
@@ -27,8 +29,11 @@ public:
 
     // 子弹造成伤害的函数
     UFUNCTION()
-    void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+    virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+    //指向其防御塔的指针
+    UPROPERTY(EditAnywhere, Category = "Tower")
+    ATowerPaperFlipbookActor* MyTower;
 protected:
     virtual void BeginPlay() override;
 
@@ -42,10 +47,6 @@ protected:
     // 每帧更新子弹的位置
     virtual void Tick(float DeltaTime) override;
 
-    // 子弹的移动组件
-    UPROPERTY(EditAnywhere, Category = "Movement")
-    UProjectileMovementComponent* ProjectileMovement;
-
     // 子弹的碰撞组件
     UPROPERTY(EditAnywhere, Category = "Components")
     UBoxComponent* CollisionBox;
@@ -57,6 +58,15 @@ protected:
     // 伤害类型
     UPROPERTY(EditAnywhere, Category = "Damage")
     TSubclassOf<UDamageType> DamageTypeClass;
+
+    // 子弹外观
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+    UPaperFlipbookComponent* BulletFlipbook;
+
+    // 不同等级子弹外观数组
+    UPROPERTY(EditDefaultsOnly, Category = "Bullet")
+    TArray<UPaperFlipbook*> BulletLevelsFlipbooks;
+
 };
 
 

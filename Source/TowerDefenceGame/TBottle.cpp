@@ -8,7 +8,6 @@ ATBottle::ATBottle()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	//设置相关金额
-	BuildCost = 100;
 	UpgradeCost.Add(180);
 	UpgradeCost.Add(260);
 	SellCost.Add(80);

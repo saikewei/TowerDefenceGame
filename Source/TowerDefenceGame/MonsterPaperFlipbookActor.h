@@ -9,6 +9,7 @@
 class USplineComponent;
 class UUserwidget;
 class UBoxComponent;
+class ATShitBullet;
 /**
  * 
  */
@@ -16,6 +17,8 @@ UCLASS()
 class TOWERDEFENCEGAME_API AMonsterPaperFlipbookActor : public APaperFlipbookActor
 {
 	GENERATED_BODY()
+
+	friend class ATShitBullet;
 public:
 	AMonsterPaperFlipbookActor();
 	
@@ -49,7 +52,7 @@ protected:
 	UBoxComponent* CollisionBox;
 
 	//移动速度
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MovingSpeed;
 
 	//当前在路径中的位置

@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TowerPaperFlipbookActor.h"
 #include "TBottle.h"
+#include "TShit.h"
 #include "ToweDefenceGameState.h"
 #include "BuildMenu.generated.h"
 
@@ -38,17 +39,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BuildMenu")
 	ATowerPaperFlipbookActor* Tower;
 
-	// 建造瓶子塔的按钮
+	//建造瓶子塔的按钮
 	UPROPERTY(meta = (BindWidget))
 	UButton* TBottleBtn;
 
+	//建造便便塔的按钮
+	UPROPERTY(meta = (BindWidget))
+	UButton* TShitBtn;
+
 protected:
-	// 点击建造瓶子塔事件
+	//点击建造瓶子塔事件
 	UFUNCTION()
 	void ClickTBottleBtn();
 
-	// 瓶子塔蓝图子类
+	//瓶子塔蓝图子类
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<ATBottle> Bottle;
+
+	//点击建造便便塔事件
+	UFUNCTION()
+	void ClickTShitBtn();
+
+	//便便塔蓝图子类
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<ATShit> Shit;
 	
 };

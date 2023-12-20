@@ -21,9 +21,6 @@ public:
 	// 初始化函数
 	virtual void NativeConstruct() override;
 
-	// 设置按钮可见性函数
-	void SetButtonVisibility();
-
 	// 升级按钮
 	UPROPERTY(meta = (BindWidget))
 	UButton* UpgradeBtnL1;

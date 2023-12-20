@@ -22,9 +22,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// 防御塔建造花费
-	UPROPERTY(EditAnyWhere,Category="Cost")
-	int32 BuildCost;
-
-
 };

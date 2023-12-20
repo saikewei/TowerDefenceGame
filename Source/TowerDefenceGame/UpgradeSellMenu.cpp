@@ -49,12 +49,7 @@ void UUpgradeSellMenu::NativeConstruct()
 				break;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Construct"));
-}
-
-void UUpgradeSellMenu::SetButtonVisibility()
-{
-	
+	//UE_LOG(LogTemp, Warning, TEXT("Construct"));
 }
 
 void UUpgradeSellMenu::OnClickUpgradeBtnL1()

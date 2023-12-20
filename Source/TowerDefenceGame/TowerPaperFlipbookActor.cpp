@@ -4,6 +4,7 @@
 #include "TowerPaperFlipbookActor.h"
 #include "ObstaclePaperFlipbookActor.h"
 #include "TowerBase.h"
+#include "Bullet.h"
 
 const int MaxLevel = 2;
 
@@ -23,7 +24,7 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	UE_LOG(LogTemp, Warning, TEXT("Constructed!"));
 
 	//设置发射频率
-	FireRate = 0.2f; // 每0.2秒发射一次
+	FireRate = 0.2f; //每0.2秒发射一次
 
 	//调整防御塔方向
 	TowerRotation = GetActorRotation();
@@ -39,6 +40,9 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 
 	//初始化目标怪物指针
 	TargetMonster = nullptr;
+
+	//绑定动画播放结束的委托
+	TowerFlipbook->OnFinishedPlaying.AddDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
 
 	IsVisible = false;
 	Menu = nullptr;
@@ -92,8 +96,6 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 	return TargetMonster;
 }
 
-
-
 void ATowerPaperFlipbookActor::FireAtTarget()
 {
 	if (TargetMonster)
@@ -102,8 +104,16 @@ void ATowerPaperFlipbookActor::FireAtTarget()
 		ABullet* Bullet = GetWorld()->SpawnActor<ABullet>(BulletClass, GetActorLocation(), Direction.Rotation());
 		if (Bullet)
 		{
+			Bullet->MyTower = this;
 			Bullet->InitializeBullet(Direction);
 			//UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), Direction.X, Direction.Y, Direction.Z);
+		}
+		//播放对应等级的攻击动画
+		if (AttackAnimations.IsValidIndex(CurrentLevel))
+		{
+			TowerFlipbook->SetFlipbook(AttackAnimations[CurrentLevel]);
+			TowerFlipbook->PlayFromStart();
+			TowerFlipbook->SetLooping(false); //确保动画不循环
 		}
 	}
 }
@@ -114,19 +124,23 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 	{
 		CurrentLevel++;
 		// 更新防御塔属性：攻击力、攻击范围、攻击间隔等
-		AttackRange += 200.f;
+		AttackRange += 200.f; 
+		DetectionSphere->SetSphereRadius(AttackRange);
 		if (FireRate >= 0.01f)
 		{
 			FireRate -= 0.1f;
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("CLevel:%d"), CurrentLevel);
+		
 		// 更换防御塔的外观
-		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel - 1) && CurrentLevel - 1 >= 0)
+		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel) && CurrentLevel >= 0)
 		{
-			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel - 1]);
+			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
 			//UE_LOG(LogTemp, Warning, TEXT("Level:%d"), CurrentLevel);
 		}
+
+		
 
 		// 花费金币
 		AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
@@ -209,6 +223,13 @@ void ATowerPaperFlipbookActor::SetMyBase(ATowerBase* const Base)
 {
 	MyBase = Base;
 	MyBase->SetIsTower(true);
+}
+
+void ATowerPaperFlipbookActor::OnAnimationFinished()
+{
+	//切换回默认动画（非攻击状态的动画）
+	TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
+	UE_LOG(LogTemp, Warning, TEXT("SetBack"));
 }
 
 

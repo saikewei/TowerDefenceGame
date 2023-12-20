@@ -2,6 +2,7 @@
 
 
 #include "Bullet.h"
+#include "TowerPaperFlipbookActor.h"
 
 ABullet::ABullet()
 {
@@ -15,20 +16,30 @@ ABullet::ABullet()
     CollisionBox->OnComponentHit.AddDynamic(this, &ABullet::OnHit);
     CollisionBox->SetupAttachment(RootComponent);
 
-    // 初始化移动组件
-    ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-    ProjectileMovement->UpdatedComponent = RootComponent;
-    // 禁用重力
-    ProjectileMovement->ProjectileGravityScale = 0.0f;
-
     BulletDamage = 10.f; // 伤害值
     DamageTypeClass = UDamageType::StaticClass(); // 伤害类型
+
+    MyTower = nullptr;
+
+    //设置动画组件
+    BulletFlipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("BulletFlipbook"));
+    BulletFlipbook->SetupAttachment(RootComponent);
 }
 
 void ABullet::InitializeBullet(const FVector& Direction)
 {
     TravelDirection = Direction.GetSafeNormal();
-    ProjectileMovement->Velocity = TravelDirection * ProjectileMovement->InitialSpeed;
+    // 更换子弹的外观
+    if (MyTower && BulletLevelsFlipbooks.IsValidIndex(MyTower->CurrentLevel - 1) && MyTower->CurrentLevel - 1 >= 0)
+    {
+        BulletFlipbook->SetFlipbook(BulletLevelsFlipbooks[MyTower->CurrentLevel - 1]);
+        //UE_LOG(LogTemp, Warning, TEXT("Level:%d"), CurrentLevel);
+    }
+    //提高子弹伤害
+    if (MyTower)
+    {
+        BulletDamage += MyTower->CurrentLevel * BulletDamage;
+    }
     //UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), TravelDirection.X, TravelDirection.Y, TravelDirection.Z);
 }
 

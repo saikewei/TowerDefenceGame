@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Bullet.h"
 #include "PaperFlipbookActor.h"
 #include "MonsterPaperFlipbookActor.h"
 #include "Components/SphereComponent.h"
@@ -17,6 +16,8 @@
  *
  */
 class UButton;
+class ABullet;
+class ATShitBullet;
 class ATowerBase;
 
 UCLASS()
@@ -24,6 +25,7 @@ class TOWERDEFENCEGAME_API ATowerPaperFlipbookActor : public APaperFlipbookActor
 {
 	GENERATED_BODY()
 
+	friend class ATShitBullet;
 public:
 	ATowerPaperFlipbookActor();
 	// Called every frame
@@ -54,6 +56,8 @@ public:
 
 	//设置当前塔的塔基
 	void SetMyBase(ATowerBase* const Base);
+
+	void OnAnimationFinished();
 
 	// 当前防御塔的级别
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tower")
@@ -103,7 +107,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Rotation")
 	FRotator TowerRotation;
 
-	// 防御塔类
+	// 防御塔外观
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperFlipbookComponent* TowerFlipbook;
 
@@ -121,6 +125,11 @@ protected:
 	// 创建指向菜单的指针
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tower")
 	UUpgradeSellMenu* Menu;
+
+	// 不同等级的防御塔攻击动画
+	UPROPERTY(EditAnywhere, Category = "Tower Animation")
+	TArray<UPaperFlipbook*> AttackAnimations;
+
 
 	//生成此塔的塔基
 	ATowerBase* MyBase;

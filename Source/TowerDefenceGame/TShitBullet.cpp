@@ -34,8 +34,8 @@ void ATShitBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
 {
     // 给怪物减速
-    float OriginalSpeed = Monster->MovingSpeed;
-    Monster->MovingSpeed /= 2;
+    float OriginalSpeed = Monster->OriginalSpeed;
+    Monster->MovingSpeed = OriginalSpeed / 2;
 
     // 设置定时器恢复速度
     FTimerHandle TimerHandle;

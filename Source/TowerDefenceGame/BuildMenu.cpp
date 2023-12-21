@@ -5,6 +5,7 @@
 #include "TowerBase.h"
 const int BottleCost = 100;
 const int ShitCost = 120;
+const int FanCost = 160;
 
 void UBuildMenu::NativeConstruct()
 {
@@ -14,6 +15,7 @@ void UBuildMenu::NativeConstruct()
 	// 绑定点击事件
 	TBottleBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTBottleBtn);
 	TShitBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTShitBtn);
+	TFanBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTFanBtn);
 	//设置按钮是否可点击
 	if (GameState->GetMoney() < BottleCost)
 	{
@@ -31,7 +33,14 @@ void UBuildMenu::NativeConstruct()
 	{
 		TShitBtn->SetIsEnabled(true);
 	}
-
+	if (GameState->GetMoney() < FanCost)
+	{
+		TFanBtn->SetIsEnabled(false);
+	}
+	else
+	{
+		TFanBtn->SetIsEnabled(true);
+	}
 
 }
 
@@ -42,7 +51,7 @@ void UBuildMenu::ClickTBottleBtn()
 	FRotator Rotation = FRotator(0, 0, 0);
 	Tower = World->SpawnActor<ATBottle>(Bottle, BuildLocation, Rotation);
 	Tower->SetMyBase(TargetBase);
-	UE_LOG(LogTemp, Warning, TEXT("Spawn"));
+	//UE_LOG(LogTemp, Warning, TEXT("Spawn"));
 	this->RemoveFromParent();
 	TargetBase->ToggleSignVsibility(false);
 	TargetBase->IsPlusSign = false;
@@ -56,9 +65,23 @@ void UBuildMenu::ClickTShitBtn()
 	FRotator Rotation = FRotator(0, 0, 0);
 	Tower = World->SpawnActor<ATShit>(Shit, BuildLocation, Rotation);
 	Tower->SetMyBase(TargetBase);
-	UE_LOG(LogTemp, Warning, TEXT("Spawn"));
+	//UE_LOG(LogTemp, Warning, TEXT("Spawn"));
 	this->RemoveFromParent();
 	TargetBase->ToggleSignVsibility(false);
 	TargetBase->IsPlusSign = false;
 	GameState->AddMoney(-ShitCost);
+}
+
+void UBuildMenu::ClickTFanBtn()
+{
+	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
+	UWorld* World = GetWorld();
+	FRotator Rotation = FRotator(0, 0, 0);
+	Tower = World->SpawnActor<ATFan>(Fan, BuildLocation, Rotation);
+	Tower->SetMyBase(TargetBase);
+	//UE_LOG(LogTemp, Warning, TEXT("Spawn"));
+	this->RemoveFromParent();
+	TargetBase->ToggleSignVsibility(false);
+	TargetBase->IsPlusSign = false;
+	GameState->AddMoney(-FanCost);
 }

@@ -7,7 +7,7 @@ ATShit::ATShit()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	FireRate = 0.4f;
+	FireRate = 0.8f;
 	AttackRange = 800.f;
 	DetectionSphere->SetSphereRadius(AttackRange);
 	//设置相关金额

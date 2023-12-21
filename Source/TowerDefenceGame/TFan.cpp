@@ -5,7 +5,7 @@
 
 ATFan::ATFan()
 {
-	FireRate = 0.4f;
+	FireRate = 1.2f;
 	AttackRange = 1200.f;
 	DetectionSphere->SetSphereRadius(AttackRange);
 	//设置相关金额

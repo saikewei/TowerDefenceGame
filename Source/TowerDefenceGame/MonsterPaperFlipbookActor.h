@@ -55,6 +55,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MovingSpeed;
 
+	//初始移速
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float OriginalSpeed;
+
 	//当前在路径中的位置
 	float CurrentLocation;
 

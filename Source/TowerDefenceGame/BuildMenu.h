@@ -9,6 +9,7 @@
 #include "TowerPaperFlipbookActor.h"
 #include "TBottle.h"
 #include "TShit.h"
+#include "TFan.h"
 #include "ToweDefenceGameState.h"
 #include "BuildMenu.generated.h"
 
@@ -47,6 +48,10 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UButton* TShitBtn;
 
+	//建造风扇塔的按钮
+	UPROPERTY(meta = (BindWidget))
+	UButton* TFanBtn;
+
 protected:
 	//点击建造瓶子塔事件
 	UFUNCTION()
@@ -64,4 +69,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<ATShit> Shit;
 	
+	//点击建造风扇塔事件
+	UFUNCTION()
+	void ClickTFanBtn();
+
+	//风扇塔蓝图子类
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<ATFan> Fan;
+
 };

@@ -14,4 +14,6 @@ class TOWERDEFENCEGAME_API AObstaclePaperFlipbookActor : public AMonsterPaperFli
 {
 	GENERATED_BODY()
 	AObstaclePaperFlipbookActor();
+public:
+	void ToggleCollision(bool Aimed);
 };

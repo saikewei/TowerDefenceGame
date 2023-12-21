@@ -2,6 +2,7 @@
 
 
 #include "MonsterPaperFlipbookActor.h"
+#include "ObstaclePaperFlipbookActor.h"
 #include "Components/SplineComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,6 +22,7 @@ AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 
 	MyPath = nullptr;
 	MovingSpeed = 300.f;
+	OriginalSpeed = 300.f;
 	CurrentLocation = 0;
 	IsAimed = false;
 }
@@ -103,6 +105,8 @@ void AMonsterPaperFlipbookActor::ChangeIsAimed()
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonsterPaperFlipbookActor::StaticClass(), OtherMonsters);
 		for (AActor* Monster : OtherMonsters)
 		{
+			// 如果是障碍物，则更改碰撞设置
+			
 			AMonsterPaperFlipbookActor* CastMonster = Cast< AMonsterPaperFlipbookActor>(Monster);
 			if(CastMonster)
 			{
@@ -110,17 +114,33 @@ void AMonsterPaperFlipbookActor::ChangeIsAimed()
 				{
 					CastMonster->ChangeIsAimed();
 				}
+				AObstaclePaperFlipbookActor* ObstacleActor = Cast<AObstaclePaperFlipbookActor>(CastMonster);
+				if (ObstacleActor)
+				{
+					ObstacleActor->ToggleCollision(false);
+				}
 			}
 		}
 		
 		//设置被锁定状态
 		CurrentState->SetAimedTarget(this);
+		AObstaclePaperFlipbookActor* ObstacleActor = Cast<AObstaclePaperFlipbookActor>(this);
+		if (ObstacleActor)
+		{
+			ObstacleActor->ToggleCollision(true);
+		}
 	}
 	else
 	{
 		if (CurrentState)
 		{
 			CurrentState->SetAimedTarget(nullptr);
+		}
+		// 如果是障碍物，则更改碰撞设置
+		AObstaclePaperFlipbookActor* ObstacleActor = Cast<AObstaclePaperFlipbookActor>(this);
+		if (ObstacleActor)
+		{
+			ObstacleActor->ToggleCollision(false);
 		}
 	}
 }

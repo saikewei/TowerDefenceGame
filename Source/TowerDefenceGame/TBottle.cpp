@@ -19,7 +19,7 @@ void ATBottle::RotateToTarget()
 {
 	if (TargetMonster)
 	{
-		// 计算新的朝向
+		//计算新的朝向
 		FVector Direction = (TargetMonster->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 		FRotator NewRotation = FRotationMatrix::MakeFromZ(Direction).Rotator();
 		SetActorRotation(NewRotation);

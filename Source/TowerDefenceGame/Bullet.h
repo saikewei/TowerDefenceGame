@@ -20,53 +20,58 @@ UCLASS()
 class TOWERDEFENCEGAME_API ABullet : public APaperFlipbookActor
 {
 	GENERATED_BODY()
-
+    friend class ATowerPaperFlipbookActor;
 public:
     ABullet();
 
-    // 初始化子弹的属性
+    //初始化子弹的属性
     void InitializeBullet(const FVector& Direction);
 
-    // 子弹造成伤害的函数
+    //子弹造成伤害的函数
     UFUNCTION()
     virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+    //子弹自动销毁函数
+    void AutoDestroy();
+protected:
+    virtual void BeginPlay() override;
 
     //指向其防御塔的指针
     UPROPERTY(EditAnywhere, Category = "Tower")
     ATowerPaperFlipbookActor* MyTower;
-protected:
-    virtual void BeginPlay() override;
 
-    // 子弹的速度
+    //子弹的速度
     UPROPERTY(EditAnywhere, Category = "Bullet")
     float Speed;
 
-    // 子弹的方向
+    //子弹的方向
     FVector TravelDirection;
 
-    // 每帧更新子弹的位置
+    //每帧更新子弹的位置
     virtual void Tick(float DeltaTime) override;
 
-    // 子弹的碰撞组件
+    //子弹的碰撞组件
     UPROPERTY(EditAnywhere, Category = "Components")
     UBoxComponent* CollisionBox;
 
-    // 子弹的伤害值
+    //子弹的伤害值
     UPROPERTY(BlueprintReadWrite, Category = "Damage")
     float BulletDamage;
 
-    // 伤害类型
+    //伤害类型
     UPROPERTY(EditAnywhere, Category = "Damage")
     TSubclassOf<UDamageType> DamageTypeClass;
 
-    // 子弹外观
+    //子弹外观
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     UPaperFlipbookComponent* BulletFlipbook;
 
-    // 不同等级子弹外观数组
+    //不同等级子弹外观数组
     UPROPERTY(EditDefaultsOnly, Category = "Bullet")
     TArray<UPaperFlipbook*> BulletLevelsFlipbooks;
 
+    //定时器句柄
+    FTimerHandle TimerHandle;
 };
 
 

@@ -7,13 +7,13 @@
 void UUpgradeSellMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
-	// 绑定点击事件
+	//绑定点击事件
 	UpgradeBtnL1->OnClicked.AddDynamic(this, &UUpgradeSellMenu::OnClickUpgradeBtnL1);
 	UpgradeBtnL2->OnClicked.AddDynamic(this, &UUpgradeSellMenu::OnClickUpgradeBtnL2);
 	SellBtnL1->OnClicked.AddDynamic(this, &UUpgradeSellMenu::OnClickSellBtnL1);
 	SellBtnL2->OnClicked.AddDynamic(this, &UUpgradeSellMenu::OnClickSellBtnL2);
 	SellBtnL3->OnClicked.AddDynamic(this, &UUpgradeSellMenu::OnClickSellBtnL3);
-	// 初始全设为不可见
+	//初始全设为不可见
 	UpgradeBtnL1->SetVisibility(ESlateVisibility::Hidden);
 	UpgradeBtnL2->SetVisibility(ESlateVisibility::Hidden);
 	UpgradeBtnL3->SetVisibility(ESlateVisibility::Hidden);

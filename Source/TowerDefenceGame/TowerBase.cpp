@@ -12,12 +12,12 @@ ATowerBase::ATowerBase()
 	IsTower = false;
 	IsPlusSign = false;
 	Menu = nullptr;
-	// 初始化碰撞组件
+	//初始化碰撞组件
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	CollisionBox->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
+//Called when the game starts or when spawned
 void ATowerBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,7 +34,7 @@ void ATowerBase::NotifyActorOnClicked(FKey ButtonPressed)
 
 void ATowerBase::SetOtherBasesInvisible()
 {
-	// 获取关卡中所有的塔基，并将除自身外的塔基设置为不可见
+	//获取关卡中所有的塔基，并将除自身外的塔基设置为不可见
 	UWorld* World = GetWorld(); 
 	TArray<AActor*> Bases;
 	UGameplayStatics::GetAllActorsOfClass(World, ATowerBase::StaticClass(), Bases);
@@ -58,11 +58,11 @@ void ATowerBase::Tick(float DeltaTime)
 void ATowerBase::SetBaseVisibility(bool Visible)
 {
 	IsPlusSign = Visible;
-	// 设置加号标志可见性
+	//设置加号标志可见性
 	this->ToggleSignVsibility(IsPlusSign);
 	if (!Visible)
 	{
-		// 删除菜单
+		//删除菜单
 		if (Menu)
 		{
 			Menu->RemoveFromParent();
@@ -71,11 +71,11 @@ void ATowerBase::SetBaseVisibility(bool Visible)
 	}
 	else
 	{
-		// 创建菜单并生成到对应的位置
+		//创建菜单并生成到对应的位置
 		Menu = CreateWidget<UBuildMenu>(GetWorld(), BuildMenuBlueprintClass);
 		if (Menu)
 		{
-			// 获取玩家控制器
+			//获取玩家控制器
 			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 			FVector2D Position;
 			Menu->BuildLocation = GetActorLocation();

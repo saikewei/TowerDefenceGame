@@ -5,17 +5,18 @@
 
 ATFanBullet::ATFanBullet()
 {
+    CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_Pawn); //修改碰撞类型，使其可以穿过障碍物
 	BulletDamage = 15.0f;
 }
 
 void ATFanBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    // 检查是否击中怪物
+    //检查是否击中怪物
     AMonsterPaperFlipbookActor* Monster = Cast<AMonsterPaperFlipbookActor>(OtherActor);
     if (Monster)
     {
         UE_LOG(LogTemp, Warning, TEXT("Hit!"));
-        // 造成伤害
+        //造成伤害
         UGameplayStatics::ApplyDamage(Monster, BulletDamage, nullptr, this, DamageTypeClass);
     }
 }

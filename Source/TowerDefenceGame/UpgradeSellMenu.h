@@ -17,37 +17,10 @@ UCLASS()
 class TOWERDEFENCEGAME_API UUpgradeSellMenu : public UUserWidget
 {
 	GENERATED_BODY()
+	friend class ATowerPaperFlipbookActor;
 public:
-	// 初始化函数
+	//初始化函数
 	virtual void NativeConstruct() override;
-
-	// 升级按钮
-	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeBtnL1;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeBtnL2;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* UpgradeBtnL3;
-
-	// 售出按钮
-	UPROPERTY(meta = (BindWidget))
-	UButton* SellBtnL1;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* SellBtnL2;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* SellBtnL3;
-
-	// 其对应防御塔的指针
-	UPROPERTY(EditAnywhere, Category = "Menu")
-	ATowerPaperFlipbookActor* TargetTower;
-
-	// 生成位置
-	UPROPERTY(EditAnywhere, Category = "Menu")
-	FVector BuildLocation;
 
 protected:
 	// 点击升级事件
@@ -67,7 +40,32 @@ protected:
 	UFUNCTION()
 	void OnClickSellBtnL3();
 
-	
-	
-	
+	//升级按钮
+	UPROPERTY(meta = (BindWidget))
+	UButton* UpgradeBtnL1;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* UpgradeBtnL2;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* UpgradeBtnL3;
+
+	//售出按钮
+	UPROPERTY(meta = (BindWidget))
+	UButton* SellBtnL1;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SellBtnL2;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* SellBtnL3;
+
+	//其对应防御塔的指针
+	UPROPERTY(EditAnywhere, Category = "Menu")
+	ATowerPaperFlipbookActor* TargetTower;
+
+	//生成位置
+	UPROPERTY(EditAnywhere, Category = "Menu")
+	FVector BuildLocation;
+
 };

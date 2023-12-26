@@ -38,7 +38,7 @@ void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
     Monster->MovingSpeed = OriginalSpeed / 2;
 
     // 设置定时器恢复速度
-    FTimerHandle TimerHandle;
+    FTimerHandle ShitTimerHandle;
     FTimerDelegate TimerDelegate;
     TimerDelegate.BindLambda([Monster, OriginalSpeed]()
         {
@@ -47,5 +47,5 @@ void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
                 Monster->MovingSpeed = OriginalSpeed;
             }
         });
-    GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, DecerlerationTime, false);
+    GetWorld()->GetTimerManager().SetTimer(ShitTimerHandle, TimerDelegate, DecerlerationTime, false);
 }

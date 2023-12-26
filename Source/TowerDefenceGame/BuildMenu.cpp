@@ -10,9 +10,9 @@ const int FanCost = 160;
 void UBuildMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
-	// 获取GameState
+	//获取GameState
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
-	// 绑定点击事件
+	//绑定点击事件
 	TBottleBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTBottleBtn);
 	TShitBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTShitBtn);
 	TFanBtn->OnClicked.AddDynamic(this, &UBuildMenu::ClickTFanBtn);

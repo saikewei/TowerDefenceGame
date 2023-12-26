@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TowerPaperFlipbookActor.h"
 #include "ObstaclePaperFlipbookActor.h"
 #include "TowerBase.h"
@@ -16,12 +15,6 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	DetectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DetectionSphere"));
 	DetectionSphere->SetupAttachment(RootComponent);
 	DetectionSphere->SetSphereRadius(AttackRange);
-
-	//// 添加盒体碰撞体，用于检测鼠标
-	//CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	//CollisionBox->SetupAttachment(RootComponent);
-
-	UE_LOG(LogTemp, Warning, TEXT("Constructed!"));
 
 	//设置发射频率
 	FireRate = 0.2f; //每0.2秒发射一次
@@ -44,6 +37,19 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	//绑定动画播放结束的委托
 	TowerFlipbook->OnFinishedPlaying.AddDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
 
+	//初始化音频组件
+	AttackAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AttackAudioComponent"));
+	AttackAudioComponent->SetupAttachment(RootComponent);
+	AttackAudioComponent->bAutoActivate = false;//禁用自动激活，防止防御塔生成时播放这个音乐
+
+	BuildAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BuildAudioComponent"));
+	BuildAudioComponent->SetupAttachment(RootComponent);
+	BuildAudioComponent->bAutoActivate = true;
+
+	UpgradeAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("UpgradeAudioComponent"));
+	UpgradeAudioComponent->SetupAttachment(RootComponent);
+	UpgradeAudioComponent->bAutoActivate = false;
+
 	IsVisible = false;
 	Menu = nullptr;
 	MyBase = nullptr;
@@ -58,8 +64,11 @@ void ATowerPaperFlipbookActor::Tick(float DeltaTime)
 void ATowerPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
-	// 设置定时器以定期调用 FireAtTarget
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
+	//设置定时器以定期调用FireAtTarget
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, [this]()
+		{
+			FireAtTarget();
+		}, FireRate, true);
 }
 
 AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
@@ -78,9 +87,10 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 		}
 	}
 
-	// 遍历 MonstersInRange 数组，寻找最近的怪物
-	for (AMonsterPaperFlipbookActor* Monster : MonstersInRange)
+	//遍历 MonstersInRange 数组，寻找最近的怪物
+	for (auto It = MonstersInRange.CreateIterator(); It; ++It)
 	{
+		AMonsterPaperFlipbookActor* Monster = *It;
 		if (Monster && !Cast<AObstaclePaperFlipbookActor>(Monster))
 		{
 			float Distance = FVector::Dist(this->GetActorLocation(), Monster->GetActorLocation());
@@ -115,6 +125,11 @@ void ATowerPaperFlipbookActor::FireAtTarget()
 			TowerFlipbook->PlayFromStart();
 			TowerFlipbook->SetLooping(false); //确保动画不循环
 		}
+		//播放攻击音效
+		if (AttackAudioComponent && AttackAudioComponent->IsReadyForOwnerToAutoDestroy())
+		{
+			AttackAudioComponent->Play();
+		}
 	}
 }
 
@@ -123,7 +138,7 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 	if (CurrentLevel < MaxLevel)
 	{
 		CurrentLevel++;
-		// 更新防御塔属性：攻击力、攻击范围、攻击间隔等
+		//更新防御塔属性：攻击力、攻击范围、攻击间隔等
 		AttackRange += 200.f; 
 		DetectionSphere->SetSphereRadius(AttackRange);
 		if (FireRate >= 0.01f)
@@ -133,16 +148,20 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("CLevel:%d"), CurrentLevel);
 		
-		// 更换防御塔的外观
+		//更换防御塔的外观
 		if (TowerLevelsFlipbooks.IsValidIndex(CurrentLevel) && CurrentLevel >= 0)
 		{
 			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
 			//UE_LOG(LogTemp, Warning, TEXT("Level:%d"), CurrentLevel);
 		}
 
-		
+		//播放升级音效
+		if (UpgradeAudioComponent && UpgradeAudioComponent->IsReadyForOwnerToAutoDestroy())
+		{
+			UpgradeAudioComponent->Play();
+		}
 
-		// 花费金币
+		//花费金币
 		AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 		if (CurrentLevel - 1 >= 0)
 		{
@@ -153,7 +172,7 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 
 void ATowerPaperFlipbookActor::SellTower()
 {
-	// 返还金币
+	//返还金币
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 	GameState->AddMoney(SellCost[CurrentLevel]);
 	
@@ -169,14 +188,14 @@ void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
 	this->SetSelfVisibility(!IsVisible);
 	IsVisible = !IsVisible;
 	SetOthersInvisible();
-	UE_LOG(LogTemp, Warning, TEXT("Click"));
+	UE_LOG(LogTemp, Warning, TEXT("ClickTower"));
 }
 
 void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
 {
 	if (!Visible)
 	{
-		// 删除菜单
+		//删除菜单
 		if (Menu)
 		{
 			Menu->RemoveFromParent();
@@ -185,19 +204,18 @@ void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
 	}
 	else
 	{
-		// 创建菜单并生成到对应的位置
+		//创建菜单并生成到对应的位置
 		Menu = CreateWidget<UUpgradeSellMenu>(GetWorld(), UpgradeSellMenuBlueprintClass);
 		if (Menu)
 		{
 			Menu->TargetTower = this;
-			// 获取玩家控制器
+			//获取玩家控制器
 			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 			FVector2D Position;
 			Menu->BuildLocation = GetActorLocation();
 			PlayerController->ProjectWorldLocationToScreen(Menu->BuildLocation, Position);
 			Menu->AddToViewport();
 			Menu->SetPositionInViewport(Position);
-			UE_LOG(LogTemp, Warning, TEXT("Add!"));
 		}
 		return;
 	}
@@ -205,7 +223,7 @@ void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
 
 void ATowerPaperFlipbookActor::SetOthersInvisible()
 {
-	// 获取关卡中所有的防御塔，并将除自身外的防御塔UI设置为不可见
+	//获取关卡中所有的防御塔，并将除自身外的防御塔UI设置为不可见
 	UWorld* World = GetWorld();
 	TArray<AActor*> Towers;
 	UGameplayStatics::GetAllActorsOfClass(World, ATowerPaperFlipbookActor::StaticClass(), Towers);
@@ -229,7 +247,6 @@ void ATowerPaperFlipbookActor::OnAnimationFinished()
 {
 	//切换回默认动画（非攻击状态的动画）
 	TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
-	UE_LOG(LogTemp, Warning, TEXT("SetBack"));
 }
 
 

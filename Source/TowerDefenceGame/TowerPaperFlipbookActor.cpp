@@ -11,7 +11,7 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	// 添加球形碰撞体，设定检测范围
+	//添加球形碰撞体，设定检测范围
 	DetectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DetectionSphere"));
 	DetectionSphere->SetupAttachment(RootComponent);
 	DetectionSphere->SetSphereRadius(AttackRange);
@@ -77,7 +77,7 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 	float MinDistance = MAX_FLT;
 	AToweDefenceGameState* CurrentState = Cast<AToweDefenceGameState>(GetWorld()->GetGameState());
 
-	// 首先看看有没有手动锁定的目标，目标是否在范围
+	//首先看看有没有手动锁定的目标，目标是否在范围
 	if (CurrentState->GetAimedTarget() != nullptr)
 	{
 		if (MonstersInRange.Find(CurrentState->GetAimedTarget()) != INDEX_NONE)
@@ -87,7 +87,7 @@ AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
 		}
 	}
 
-	//遍历 MonstersInRange 数组，寻找最近的怪物
+	//遍历MonstersInRange数组，寻找最近的怪物
 	for (auto It = MonstersInRange.CreateIterator(); It; ++It)
 	{
 		AMonsterPaperFlipbookActor* Monster = *It;
@@ -123,7 +123,12 @@ void ATowerPaperFlipbookActor::FireAtTarget()
 		{
 			TowerFlipbook->SetFlipbook(AttackAnimations[CurrentLevel]);
 			TowerFlipbook->PlayFromStart();
-			TowerFlipbook->SetLooping(false); //确保动画不循环
+			TowerFlipbook->SetLooping(false);//确保动画不循环
+		}
+		//停止当前播放的音效,防止攻击速度过快导致后续音效无法播放
+		if (AttackAudioComponent->IsPlaying())
+		{
+			AttackAudioComponent->Stop();
 		}
 		//播放攻击音效
 		if (AttackAudioComponent && AttackAudioComponent->IsReadyForOwnerToAutoDestroy())
@@ -154,7 +159,10 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 			TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
 			//UE_LOG(LogTemp, Warning, TEXT("Level:%d"), CurrentLevel);
 		}
-
+		if (UpgradeAudioComponent->IsPlaying())
+		{
+			UpgradeAudioComponent->Stop();
+		}
 		//播放升级音效
 		if (UpgradeAudioComponent && UpgradeAudioComponent->IsReadyForOwnerToAutoDestroy())
 		{
@@ -179,7 +187,7 @@ void ATowerPaperFlipbookActor::SellTower()
 	//恢复塔基显示
 	MyBase->SetIsTower(false);
 
-	// 销毁防御塔
+	//销毁防御塔
 	this->Destroy();
 }
 
@@ -188,7 +196,7 @@ void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
 	this->SetSelfVisibility(!IsVisible);
 	IsVisible = !IsVisible;
 	SetOthersInvisible();
-	UE_LOG(LogTemp, Warning, TEXT("ClickTower"));
+	//UE_LOG(LogTemp, Warning, TEXT("ClickTower"));
 }
 
 void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)

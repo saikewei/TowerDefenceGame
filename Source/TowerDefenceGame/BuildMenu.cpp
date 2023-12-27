@@ -49,12 +49,14 @@ void UBuildMenu::ClickTBottleBtn()
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 	UWorld* World = GetWorld();
 	FRotator Rotation = FRotator(0, 0, 0);
+	//在塔基位置生成防御塔
 	Tower = World->SpawnActor<ATBottle>(Bottle, BuildLocation, Rotation);
 	Tower->SetMyBase(TargetBase);
-	//UE_LOG(LogTemp, Warning, TEXT("Spawn"));
+	//去除该UI并使塔基加号不可见
 	this->RemoveFromParent();
 	TargetBase->ToggleSignVsibility(false);
 	TargetBase->IsPlusSign = false;
+	//调整金币
 	GameState->AddMoney(-BottleCost);
 }
 

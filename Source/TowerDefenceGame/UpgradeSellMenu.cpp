@@ -20,6 +20,7 @@ void UUpgradeSellMenu::NativeConstruct()
 	SellBtnL1->SetVisibility(ESlateVisibility::Hidden);
 	SellBtnL2->SetVisibility(ESlateVisibility::Hidden);
 	SellBtnL3->SetVisibility(ESlateVisibility::Hidden);
+	//不同等级防御塔显示不同的按钮
 	if (this->TargetTower)
 	{
 		AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
@@ -55,12 +56,14 @@ void UUpgradeSellMenu::NativeConstruct()
 void UUpgradeSellMenu::OnClickUpgradeBtnL1()
 {
 	TargetTower->UpgradeTower();
+	TargetTower->IsVisible = false;
 	this->RemoveFromParent();
 }
 
 void UUpgradeSellMenu::OnClickUpgradeBtnL2()
 {
 	TargetTower->UpgradeTower();
+	TargetTower->IsVisible = false;
 	this->RemoveFromParent();
 }
 

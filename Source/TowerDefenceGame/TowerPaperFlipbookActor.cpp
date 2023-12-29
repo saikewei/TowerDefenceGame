@@ -38,9 +38,6 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	//初始化目标怪物指针
 	TargetMonster = nullptr;
 
-	//绑定动画播放结束的委托
-	TowerFlipbook->OnFinishedPlaying.AddDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
-
 	//初始化音频组件
 	AttackAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AttackAudioComponent"));
 	AttackAudioComponent->SetupAttachment(RootComponent);
@@ -260,12 +257,6 @@ void ATowerPaperFlipbookActor::SetMyBase(ATowerBase* const Base)
 {
 	MyBase = Base;
 	MyBase->SetIsTower(true);
-}
-
-void ATowerPaperFlipbookActor::OnAnimationFinished()
-{
-	//切换回默认动画（非攻击状态的动画）
-	TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
 }
 
 void ATowerPaperFlipbookActor::SetAttackRangeVisualScale()

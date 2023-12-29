@@ -61,9 +61,6 @@ public:
 	//设置当前塔的塔基
 	void SetMyBase(ATowerBase* const Base);
 
-	//动画结束时调用
-	void OnAnimationFinished();
-
 	//设置可视化攻击范围大小
 	void SetAttackRangeVisualScale();
 

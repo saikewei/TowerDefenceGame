@@ -64,6 +64,9 @@ public:
 	//动画结束时调用
 	void OnAnimationFinished();
 
+	//设置可视化攻击范围大小
+	void SetAttackRangeVisualScale();
+
 protected:
 	//防御塔攻击半径
 	UPROPERTY(EditAnywhere, Category = "Basic")
@@ -99,6 +102,10 @@ protected:
 	//防御塔外观
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperFlipbookComponent* TowerFlipbook;
+
+	//可视化攻击范围
+	UPROPERTY(EditAnywhere)
+	UPaperFlipbookComponent* AttackRangeVisual;
 
 	//不同等级防御塔外观数组
 	UPROPERTY(EditDefaultsOnly, Category = "Tower")

@@ -28,6 +28,10 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	TowerFlipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("TowerFlipbook"));
 	TowerFlipbook->SetupAttachment(RootComponent);
 
+	AttackRangeVisual = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("AttackRangeVisual"));
+	AttackRangeVisual->SetupAttachment(RootComponent);
+	AttackRangeVisual->SetVisibility(false); // 默认设置为不可见
+
 	//初始化等级
 	CurrentLevel = 0;
 
@@ -64,6 +68,7 @@ void ATowerPaperFlipbookActor::Tick(float DeltaTime)
 void ATowerPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
+	SetAttackRangeVisualScale();
 	//设置定时器以定期调用FireAtTarget
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, [this]()
 		{
@@ -146,6 +151,8 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 		//更新防御塔属性：攻击力、攻击范围、攻击间隔等
 		AttackRange += 200.f; 
 		DetectionSphere->SetSphereRadius(AttackRange);
+		SetAttackRangeVisualScale();
+		AttackRangeVisual->SetVisibility(false);
 		if (FireRate >= 0.01f)
 		{
 			FireRate -= 0.1f;
@@ -194,6 +201,9 @@ void ATowerPaperFlipbookActor::SellTower()
 void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
 {
 	this->SetSelfVisibility(!IsVisible);
+	//切换攻击范围的可见性
+	bool bIsCurrentlyVisible = AttackRangeVisual->IsVisible();
+	AttackRangeVisual->SetVisibility(!bIsCurrentlyVisible);
 	IsVisible = !IsVisible;
 	SetOthersInvisible();
 	//UE_LOG(LogTemp, Warning, TEXT("ClickTower"));
@@ -241,6 +251,7 @@ void ATowerPaperFlipbookActor::SetOthersInvisible()
 		if (Temp != this)
 		{
 			Temp->SetSelfVisibility(false);
+			Temp->AttackRangeVisual->SetVisibility(false);
 		}
 	}
 }
@@ -255,6 +266,18 @@ void ATowerPaperFlipbookActor::OnAnimationFinished()
 {
 	//切换回默认动画（非攻击状态的动画）
 	TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
+}
+
+void ATowerPaperFlipbookActor::SetAttackRangeVisualScale()
+{
+	const float OriginalDiameter = 330.f;
+
+	//计算缩放比例
+	float ScaleFactor = AttackRange / OriginalDiameter;
+
+	//设置 PaperFlipbook 的缩放
+	FVector NewScale(ScaleFactor, ScaleFactor, ScaleFactor);
+	AttackRangeVisual->SetWorldScale3D(NewScale);
 }
 
 

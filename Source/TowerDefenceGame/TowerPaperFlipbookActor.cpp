@@ -67,10 +67,7 @@ void ATowerPaperFlipbookActor::BeginPlay()
 	Super::BeginPlay();
 	SetAttackRangeVisualScale();
 	//设置定时器以定期调用FireAtTarget
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, [this]()
-		{
-			FireAtTarget();
-		}, FireRate, true);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
 }
 
 AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()

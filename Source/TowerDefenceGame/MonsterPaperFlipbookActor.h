@@ -84,6 +84,9 @@ protected:
 	//设置点击事件
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 
+	//移动端的触摸事件
+	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)override;
+
 	//设置头顶记号可见性
 	UFUNCTION(BlueprintImplementableEvent, Category = "Tower")
 	void SetPinMarkVisibility(bool IsVisable);

@@ -48,6 +48,11 @@ void ATowerBase::SetOtherBasesInvisible()
 	}
 }
 
+void ATowerBase::NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)
+{
+	NotifyActorOnClicked();
+}
+
 // Called every frame
 void ATowerBase::Tick(float DeltaTime)
 {

@@ -88,6 +88,12 @@ void AMonsterPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
 	ChangeIsAimed();
 }
 
+void AMonsterPaperFlipbookActor::NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)
+{
+	//直接调用点击事件处理函数
+	NotifyActorOnClicked();
+}
+
 void AMonsterPaperFlipbookActor::ChangeIsAimed()
 {
 	//反转被锁定状态

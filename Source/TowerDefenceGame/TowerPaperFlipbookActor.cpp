@@ -206,6 +206,12 @@ void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
 	//UE_LOG(LogTemp, Warning, TEXT("ClickTower"));
 }
 
+void ATowerPaperFlipbookActor::NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)
+{
+	//直接调用点击事件处理函数
+	NotifyActorOnClicked();
+}
+
 void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
 {
 	if (!Visible)

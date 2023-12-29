@@ -52,6 +52,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerBase")
 	bool IsPlusSign;
 
+	//移动端的触摸事件
+	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -52,6 +52,9 @@ public:
 	//处理点击事件
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 
+	//移动端的触摸事件
+	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)override;
+
 	//设置自身UI可见
 	void SetSelfVisibility(bool Visible);
 

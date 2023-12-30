@@ -33,12 +33,14 @@ void ACarrot::BeginPlay()
 
 }
 
+
 // Called every frame
 void ACarrot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
+
 
 void ACarrot::UpdateFlipbook()
 {
@@ -62,6 +64,57 @@ void ACarrot::UpdateFlipbook()
 	FlipbookComponent->SetFlipbook(NewFlipbook);
 }
 
+
+void ACarrot::UpgradeCarrot()
+{
+	if (CarrotHealth < 100.0f) {
+		CarrotHealth += 10.0f;
+		UpdateFlipbook();
+		AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
+		GameState->AddMoney(-880);
+	}
+}
+
+void ACarrot::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	this->SetSelfVisibility(!IsVisible);
+	IsVisible = !IsVisible;
+}
+
+void ACarrot::SetSelfVisibility(bool Visible)
+{
+	if (!Visible)
+	{
+		//删除菜单
+		if (Menu)
+		{
+			Menu->RemoveFromParent();
+		}
+		return;
+	}
+	else
+	{
+		//创建菜单并生成到对应的位置
+		Menu = CreateWidget<UUpgradeCarrotMenu>(GetWorld(), UpgradeSellMenuBlueprintClass);
+		if (Menu)
+		{
+			Menu->TargetCarrot = this;
+			//获取玩家控制器
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			FVector2D Position;
+			Menu->BuildLocation = GetActorLocation();
+			PlayerController->ProjectWorldLocationToScreen(Menu->BuildLocation, Position);
+			Menu->AddToViewport();
+			Menu->SetPositionInViewport(Position);
+		}
+		return;
+	}
+}
+
+void ACarrot::NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)
+{
+	NotifyActorOnClicked();
+}
 
 //获得给萝卜的伤害
 void ACarrot::GetDamage(float Damage)

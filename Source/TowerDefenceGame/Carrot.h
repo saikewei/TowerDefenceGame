@@ -6,6 +6,9 @@
 #include "PaperFlipbook.h"
 #include "PaperFlipbookActor.h"
 #include "PaperFlipbookComponent.h"
+#include "ToweDefenceGameState.h"
+#include "UpgradeCarrotMenu.h"
+#include "Kismet/GameplayStatics.h"
 #include "Carrot.generated.h"
 
 UCLASS()
@@ -20,6 +23,18 @@ public:
 	UFUNCTION()
 	void MyTakeDamage(float DamageAmount);
 	void UpdateFlipbook(); //根据萝卜血量更新Flipbook
+	void UpgradeCarrot();
+	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
+	void SetSelfVisibility(bool Visible);
+	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex) override;
+
+	//蓝图UI类
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+		TSubclassOf<UUpgradeCarrotMenu> UpgradeSellMenuBlueprintClass;
+
+	//创建指向菜单的指针
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Carrot")
+		UUpgradeCarrotMenu* Menu;
 
 
 protected:
@@ -46,6 +61,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Flipbook")
 	class UPaperFlipbookComponent* FlipbookComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Carrot")
+		bool IsVisible;
 
 public:
 	// Called every frame

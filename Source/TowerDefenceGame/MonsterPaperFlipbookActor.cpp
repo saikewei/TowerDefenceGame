@@ -9,7 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "ToweDefenceGameState.h"
-#include "ToweDefenceGameState.h"
+#include "TowerDefenceGameModeBase.h"
 
 AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 {
@@ -36,6 +36,11 @@ void AMonsterPaperFlipbookActor::SetPath(const USplineComponent* Path)
 void AMonsterPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
+	ATowerDefenceGameModeBase* curGamemode = Cast<ATowerDefenceGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (curGamemode)
+	{
+		MAX_HP *= .1f * curGamemode->GetCurrentWave();
+	}
 	HP = MAX_HP;
 }
 
@@ -72,7 +77,10 @@ void AMonsterPaperFlipbookActor::GetDamage(float Damage)
 		{
 			CurrentGameState->AddMoney(KillBonus);
 		}
-		Destroy();
+		MovingSpeed = 0.f;
+		FTimerHandle animationTimer;
+		GetWorldTimerManager().SetTimer(animationTimer, this, &AMonsterPaperFlipbookActor::Die, .3f, false);
+		PlayDeadAnimation();
 	}
 }
 
@@ -92,6 +100,11 @@ void AMonsterPaperFlipbookActor::NotifyActorOnInputTouchBegin(const ETouchIndex:
 {
 	//直接调用点击事件处理函数
 	NotifyActorOnClicked();
+}
+
+void AMonsterPaperFlipbookActor::Die()
+{
+	Destroy();
 }
 
 void AMonsterPaperFlipbookActor::ChangeIsAimed()

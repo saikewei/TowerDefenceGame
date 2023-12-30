@@ -30,7 +30,7 @@ protected:
 
 	//点击事件处理函数
 	UFUNCTION()
-	void ClickRestartBtn();
+	virtual void ClickRestartBtn();
 
 	UFUNCTION()
 	void ClickExitBtn();

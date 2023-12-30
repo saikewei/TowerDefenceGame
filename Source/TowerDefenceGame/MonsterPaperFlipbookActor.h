@@ -48,7 +48,7 @@ protected:
 	const USplineComponent* MyPath;
 
 	//碰撞体
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* CollisionBox;
 
 	//移动速度
@@ -90,4 +90,9 @@ protected:
 	//设置头顶记号可见性
 	UFUNCTION(BlueprintImplementableEvent, Category = "Tower")
 	void SetPinMarkVisibility(bool IsVisable);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Death")
+	void PlayDeadAnimation();
+
+	void Die();
 };

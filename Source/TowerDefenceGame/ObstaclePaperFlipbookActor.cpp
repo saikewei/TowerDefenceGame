@@ -13,6 +13,11 @@ AObstaclePaperFlipbookActor::AObstaclePaperFlipbookActor()
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
 }
 
+void AObstaclePaperFlipbookActor::BeginPlay()
+{
+    Super::BeginPlay();
+}
+
 void AObstaclePaperFlipbookActor::ToggleCollision(bool Aimed)
 {
     UE_LOG(LogTemp, Warning, TEXT("Change to %d"), Aimed);

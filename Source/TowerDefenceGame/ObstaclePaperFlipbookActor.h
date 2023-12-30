@@ -15,5 +15,8 @@ class TOWERDEFENCEGAME_API AObstaclePaperFlipbookActor : public AMonsterPaperFli
 	GENERATED_BODY()
 	AObstaclePaperFlipbookActor();
 public:
+	//在游戏开始时调用
+	virtual void BeginPlay() override;
+
 	void ToggleCollision(bool Aimed);
 };

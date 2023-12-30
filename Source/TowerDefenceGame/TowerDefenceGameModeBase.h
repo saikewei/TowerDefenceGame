@@ -17,11 +17,24 @@ class TOWERDEFENCEGAME_API ATowerDefenceGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
+	ATowerDefenceGameModeBase();
+
 	//打开暂停菜单
 	void OpenPauseMenu();
 
 	//游戏失败
 	void GameLost();
+
+	//游戏成功
+	void GameWin();
+
+	//获取当前怪物波次
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentWave()const;
+
+	//获取当前关卡序号
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentLevelNum()const;
 
 protected:
 	//在游戏开始时调用
@@ -33,9 +46,33 @@ protected:
 	//刷新一个怪物
 	void SpawnMonster();
 
+	//当前波次
+	int32 currentWave;
+
+	//怪物刷新定时器
+	FTimerHandle SpawnHandle;
+
+	//判断游戏结束定时器
+	FTimerHandle WaitForEnd;
+
+	//每一波怪物数
+	UPROPERTY(EditAnywhere)
+	TArray<int32> monsterPerWave;
+
+	//当前怪物数
+	int32 totalMonster;
+
+	//当前关卡
+	UPROPERTY(EditAnywhere)
+	int32 levelNum;
+
 	//刷新的怪物
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AMonsterPaperFlipbookActor> MonsterToSpawn;
+
+	//刷新的多种怪物
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<AMonsterPaperFlipbookActor>> MonstersList;
 
 	//怪物刷新位置
 	UPROPERTY(EditAnywhere)
@@ -59,4 +96,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "GameLostMenu")
 	TSubclassOf<UUserWidget> GameLostMenu_Class;
 	UUserWidget* GameLostMenuWidget;
+
+	//游戏成功菜单组件
+	UPROPERTY(EditAnywhere, Category = "GameWinMenu")
+	TSubclassOf<UUserWidget> GameWinMenu_Class;
+	UUserWidget* GameWinMenuWidget;
+
+
+
+	//更新下一波怪物
+	void StartNextWave();
 };

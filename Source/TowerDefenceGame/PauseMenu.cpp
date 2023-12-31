@@ -30,6 +30,8 @@ void UPauseMenu::NativeConstruct()
 
 void UPauseMenu::ClickResumeBtn()
 {
+	static ConstructorHelpers::FObjectFinder<USoundBase> Soundf(TEXT("/Game/GuardCarrot/sound/__MenuSelect"));
+	UGameplayStatics::PlaySound2D(GetWorld(), Soundf.Object);
 	//如果此前游戏没有暂停，则恢复游戏
 	if (!IsGamePausedBefore)
 	{
@@ -45,8 +47,10 @@ void UPauseMenu::ClickResumeBtn()
 
 void UPauseMenu::ClickRestartBtn()
 {
+	UGameplayStatics::OpenLevel(GetWorld(), FName(FString("level2")));
 	//重新打开当前关卡
-	UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(UGameplayStatics::GetCurrentLevelName(GetWorld())));
+	//UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));
 }
 
 void UPauseMenu::ClickExitBtn()

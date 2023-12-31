@@ -4,6 +4,7 @@
 #include "ObstaclePaperFlipbookActor.h"
 #include "Components/BoxComponent.h"
 
+
 AObstaclePaperFlipbookActor::AObstaclePaperFlipbookActor()
 {
 	
@@ -16,6 +17,20 @@ AObstaclePaperFlipbookActor::AObstaclePaperFlipbookActor()
 void AObstaclePaperFlipbookActor::BeginPlay()
 {
     Super::BeginPlay();
+
+    //初始情况下障碍物血条隐藏
+    SetHPBarMarkVisibility(false);
+}
+
+void AObstaclePaperFlipbookActor::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    if (HP != MAX_HP)
+    {
+        //障碍物掉血就显示血条
+        SetHPBarMarkVisibility(true);
+    }
 }
 
 void AObstaclePaperFlipbookActor::ToggleCollision(bool Aimed)
@@ -31,4 +46,9 @@ void AObstaclePaperFlipbookActor::ToggleCollision(bool Aimed)
         // 当障碍物未被选中时，忽略子弹
         CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
     }
+}
+
+void AObstaclePaperFlipbookActor::Die()
+{
+    Destroy();
 }

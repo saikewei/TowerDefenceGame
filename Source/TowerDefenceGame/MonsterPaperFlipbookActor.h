@@ -10,9 +10,12 @@ class USplineComponent;
 class UUserwidget;
 class UBoxComponent;
 class ATShitBullet;
+class UAudioComponent;
 /**
  * 
  */
+
+class UPaperFlipbookComponent;
 UCLASS()
 class TOWERDEFENCEGAME_API AMonsterPaperFlipbookActor : public APaperFlipbookActor
 {
@@ -88,11 +91,36 @@ protected:
 	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)override;
 
 	//设置头顶记号可见性
-	UFUNCTION(BlueprintImplementableEvent, Category = "Tower")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Pin")
 	void SetPinMarkVisibility(bool IsVisable);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Death")
+	//设置头顶记号可见性
+	UFUNCTION(BlueprintImplementableEvent, Category = "HP")
+	void SetHPBarPersentage(const float Persent);
+
+	//设置血条可见性
+	UFUNCTION(BlueprintImplementableEvent, Category = "HP")
+	void SetHPBarMarkVisibility(bool IsVisable);
+
+	//播放死亡动画
 	void PlayDeadAnimation();
 
-	void Die();
+	//生成音频组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* SpawnAudioComponent;
+
+	//死亡音频组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* DeathAudioComponent;
+
+	//死亡动画
+	UPROPERTY(EditAnywhere)
+	UPaperFlipbookComponent* DeathAnimation;
+
+	//怪物外观
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPaperFlipbookComponent* MonsterAnimation;
+
+	//死亡处理
+	virtual void Die();
 };

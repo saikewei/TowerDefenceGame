@@ -17,13 +17,21 @@ class TOWERDEFENCEGAME_API ATShitBullet : public ABullet
 	
 public:
 	ATShitBullet();
+	virtual ~ATShitBullet() noexcept override;
 	virtual void OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Decelerate(AMonsterPaperFlipbookActor* Monster);
 
+	void HandleDecelerationTimerExpired();
+
 protected:
 	UPROPERTY(BlueprintReadWrite, CateGory="Deceleration")
 	float DecerlerationTime;
+
+	FTimerHandle ShitTimerHandle; //¶¨Ê±Æ÷¾ä±ú
+
+	TWeakObjectPtr<AMonsterPaperFlipbookActor> WeakMonster;
+	float OriginalSpeed;
 	
 };

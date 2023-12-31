@@ -22,10 +22,8 @@ void ATShitBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
     {
         UE_LOG(LogTemp, Warning, TEXT("Hit!"));
         // 造成伤害
-        Monster->GetDamage(BulletDamage);
-
         Decelerate(Monster);
-
+        Monster->GetDamage(BulletDamage);
         // 销毁子弹
         Destroy();
     }
@@ -33,21 +31,33 @@ void ATShitBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 
 void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
 {
-    // 给怪物减速
-    float OriginalSpeed = Monster->OriginalSpeed;
-    Monster->MovingSpeed = OriginalSpeed / 2;
-    Monster->StepShitAnimation->SetVisibility(true);
+    if (Monster)
+    {
+        OriginalSpeed = Monster->OriginalSpeed;
+        Monster->MovingSpeed = OriginalSpeed / 2;
+        Monster->StepShitAnimation->SetVisibility(true);
+        WeakMonster = Monster;
 
-    // 设置定时器恢复速度
-    FTimerHandle ShitTimerHandle;
-    FTimerDelegate TimerDelegate;
-    TimerDelegate.BindLambda([Monster, OriginalSpeed]()
-        {
-            if (Monster)
-            {
-                Monster->MovingSpeed = OriginalSpeed;
-                Monster->StepShitAnimation->SetVisibility(false);
-            }
-        });
-    GetWorld()->GetTimerManager().SetTimer(ShitTimerHandle, TimerDelegate, DecerlerationTime, false);
+        // 设置定时器
+        GetWorld()->GetTimerManager().SetTimer(ShitTimerHandle, this, &ATShitBullet::HandleDecelerationTimerExpired, DecerlerationTime, false);
+    }
+}
+
+void ATShitBullet::HandleDecelerationTimerExpired()
+{
+    if (WeakMonster.IsValid())
+    {
+        WeakMonster->MovingSpeed = OriginalSpeed;
+        WeakMonster->StepShitAnimation->SetVisibility(false);
+    }
+    GetWorld()->GetTimerManager().ClearTimer(ShitTimerHandle);
+}
+
+ATShitBullet::~ATShitBullet()
+{
+    // 析构函数中清除定时器
+    if (GetWorld())
+    {
+        GetWorld()->GetTimerManager().ClearTimer(ShitTimerHandle);
+    }
 }

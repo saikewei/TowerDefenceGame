@@ -38,4 +38,6 @@ protected:
 	//主菜单关卡的名字
 	UPROPERTY(EditAnyWhere)
 	FName NameOfMainLevel;
+
+	void SaveCurrentGame();
 };

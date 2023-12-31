@@ -18,5 +18,11 @@ public:
 	//在游戏开始时调用
 	virtual void BeginPlay() override;
 
+	//每一个tick调用
+	virtual void Tick(float DeltaTime) override;
+
 	void ToggleCollision(bool Aimed);
+
+protected:
+	virtual void Die()override;
 };

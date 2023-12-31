@@ -7,6 +7,7 @@
 AToweDefenceGameState::AToweDefenceGameState()
 {
 	CurrentAimedTarget = nullptr;
+	TotalKill = 0;
 }
 
 int32 AToweDefenceGameState::GetMoney() const
@@ -32,4 +33,14 @@ void AToweDefenceGameState::SetAimedTarget(AMonsterPaperFlipbookActor* const Tar
 AMonsterPaperFlipbookActor* AToweDefenceGameState::GetAimedTarget() const
 {
 	return CurrentAimedTarget;
+}
+
+void AToweDefenceGameState::AddKill()
+{
+	++TotalKill;
+}
+
+int32 AToweDefenceGameState::GetTotalKill() const
+{
+	return TotalKill;
 }

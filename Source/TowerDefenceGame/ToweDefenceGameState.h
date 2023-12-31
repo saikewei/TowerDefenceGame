@@ -31,6 +31,12 @@ public:
 
 	//获取当前锁定的目标
 	AMonsterPaperFlipbookActor* GetAimedTarget()const;
+
+	//杀死怪物+1
+	void AddKill();
+
+	//返回总共杀死的怪物
+	int32 GetTotalKill()const;
 	
 protected:
 	//金钱数
@@ -39,4 +45,7 @@ protected:
 
 	//当前锁定的目标
 	AMonsterPaperFlipbookActor* CurrentAimedTarget;
+
+	//总共杀死的怪物
+	int32 TotalKill;
 };

@@ -61,6 +61,9 @@ void UGameHUD::ClickResumeBtn()
 	//¸ü»»°´Å¥
 	ResumeBtn->SetVisibility(ESlateVisibility::Hidden);
 	PauseBtn->SetVisibility(ESlateVisibility::Visible);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(GetWorld()->GetMapName()));
+	//GetWorld()->GetMapName();
 }
 
 void UGameHUD::ClickDoubleSpeedBtn()

@@ -63,6 +63,7 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	Menu = nullptr;
 	MyBase = nullptr;
 	HasTower = true;
+	SpawnDestroyAnimation = nullptr;
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
@@ -75,8 +76,11 @@ void ATowerPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
 	//绑定触发事件
+	DetectionSphere->OnComponentBeginOverlap.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
 	DetectionSphere->OnComponentBeginOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
+	DetectionSphere->OnComponentEndOverlap.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
 	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
+	TowerFlipbook->OnFinishedPlaying.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
 	TowerFlipbook->OnFinishedPlaying.AddDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
 	SetAttackRangeVisualScale();
 	//设置定时器以定期调用FireAtTarget

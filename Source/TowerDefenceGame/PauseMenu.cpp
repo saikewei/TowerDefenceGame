@@ -11,9 +11,23 @@ void UPauseMenu::NativeConstruct()
 	Super::NativeConstruct();
 
 	//绑定点击事件
-	ResumeBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickResumeBtn);
-	RestartBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickRestartBtn);
-	ExitBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickExitBtn);
+	if (ResumeBtn)
+	{
+		ResumeBtn->OnClicked.RemoveDynamic(this, &UPauseMenu::ClickResumeBtn);
+		ResumeBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickResumeBtn);
+	}
+
+	if (RestartBtn)
+	{
+		RestartBtn->OnClicked.RemoveDynamic(this, &UPauseMenu::ClickRestartBtn);
+		RestartBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickRestartBtn);
+	}
+
+	if (ExitBtn)
+	{
+		ExitBtn->OnClicked.RemoveDynamic(this, &UPauseMenu::ClickExitBtn);
+		ExitBtn->OnClicked.AddDynamic(this, &UPauseMenu::ClickExitBtn);
+	}
 
 	//获取当前游戏暂停状态
 	IsGamePausedBefore = UGameplayStatics::IsGamePaused(GetWorld());
@@ -45,7 +59,7 @@ void UPauseMenu::ClickResumeBtn()
 
 void UPauseMenu::ClickRestartBtn()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), FName(FString("level2")));
+	UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));
 	//重新打开当前关卡
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(UGameplayStatics::GetCurrentLevelName(GetWorld())));
 	//UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));

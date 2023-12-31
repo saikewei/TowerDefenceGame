@@ -49,6 +49,18 @@ public:
 	//售出防御塔
 	void SellTower();
 
+	//怪物进入防御塔范围时触发
+	UFUNCTION()
+	void OnMonsterEnterDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	//怪物离开防御塔范围时触发
+	UFUNCTION()
+	void OnMonsterLeaveDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//动画播放结束后切换回原状态
+	UFUNCTION()
+	void OnAnimationFinished();
+
 	//处理点击事件
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 
@@ -67,6 +79,7 @@ public:
 	//设置可视化攻击范围大小
 	void SetAttackRangeVisualScale();
 
+
 protected:
 	//防御塔攻击半径
 	UPROPERTY(EditAnywhere, Category = "Basic")
@@ -75,6 +88,10 @@ protected:
 	//定义碰撞体
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* DetectionSphere;
+
+	//定义点击碰撞体
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* ClickBox;
 
 	//怪物列表
 	UPROPERTY(BlueprintReadWrite, Category = "Detection")
@@ -107,12 +124,19 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UPaperFlipbookComponent* AttackRangeVisual;
 
+	//防御塔建造和销毁动画
+	UPROPERTY(EditAnywhere)
+	UPaperFlipbook* SpawnDestroyAnimation;
+
 	//不同等级防御塔外观数组
 	UPROPERTY(EditDefaultsOnly, Category = "Tower")
 	TArray<UPaperFlipbook*> TowerLevelsFlipbooks;
 
 	UPROPERTY(EditAnywhere,Category="Tower")
 	bool IsVisible;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	bool HasTower;
 
 	//蓝图UI类
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -153,4 +177,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
 	UAudioComponent* BuildAudioComponent;
 
+	//出售音频组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* SellAudioComponent;
 };

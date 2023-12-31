@@ -13,7 +13,6 @@ ABullet::ABullet()
 
     //初始化碰撞组件
     CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-    CollisionBox->OnComponentHit.AddDynamic(this, &ABullet::OnHit);
     CollisionBox->SetupAttachment(RootComponent);
 
     BulletDamage = 10.f; //伤害值
@@ -43,7 +42,7 @@ void ABullet::InitializeBullet(const FVector& Direction)
     //UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), TravelDirection.X, TravelDirection.Y, TravelDirection.Z);
 }
 
-void ABullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ABullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     //检查是否击中怪物
     AMonsterPaperFlipbookActor* Monster = Cast<AMonsterPaperFlipbookActor>(OtherActor);
@@ -51,8 +50,7 @@ void ABullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitive
     {
         UE_LOG(LogTemp, Warning, TEXT("Hit!"));
         //造成伤害
-        UGameplayStatics::ApplyDamage(Monster, BulletDamage, nullptr, this, DamageTypeClass);
-
+        Monster->GetDamage(BulletDamage);
         //销毁子弹
         Destroy();
     }
@@ -66,6 +64,8 @@ void ABullet::AutoDestroy()
 void ABullet::BeginPlay()
 {
     Super::BeginPlay();
+    //绑定触发事件
+    CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnHit);
     //设置5秒后自动销毁
     GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABullet::AutoDestroy, 5.0f, false);
 }

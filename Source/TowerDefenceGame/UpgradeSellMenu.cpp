@@ -69,22 +69,31 @@ void UUpgradeSellMenu::OnClickUpgradeBtnL2()
 
 void UUpgradeSellMenu::OnClickSellBtnL1()
 {
-	TargetTower->SellTower();
-	TargetTower = nullptr;
+	if (TargetTower)
+	{
+		TargetTower->SellTower();
+		TargetTower = nullptr;
+	}
 	this->RemoveFromParent();
 }
 
 void UUpgradeSellMenu::OnClickSellBtnL2()
 {
-	TargetTower->SellTower();
-	TargetTower = nullptr;
+	if (TargetTower)
+	{
+		TargetTower->SellTower();
+		TargetTower = nullptr;
+	}
 	this->RemoveFromParent();
 }
 
 void UUpgradeSellMenu::OnClickSellBtnL3()
 {
-	TargetTower->SellTower();
-	TargetTower = nullptr;
+	if (TargetTower)
+	{
+		TargetTower->SellTower();
+		TargetTower = nullptr;
+	}
 	this->RemoveFromParent();
 }
 

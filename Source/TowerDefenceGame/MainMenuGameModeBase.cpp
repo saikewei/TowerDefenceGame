@@ -19,6 +19,8 @@ void AMainMenuGameModeBase::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("load fail!"));
+		//只有在没有现有存档的情况下，创建新的存档实例
+		SaveGameInstance = GetMutableDefault<UTowerDefenceSaveGame>();
 		IsLevel2Availible = false;
 	}
 }

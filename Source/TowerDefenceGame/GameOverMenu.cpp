@@ -27,7 +27,7 @@ void UGameOverMenu::ClickRestartBtn()
 void UGameOverMenu::ClickExitBtn()
 {
 	//回到主菜单
-	UGameplayStatics::OpenLevel(GetWorld(), NameOfMainLevel);
+	UGameplayStatics::OpenLevel(GetWorld(), FName(FString("MenuLevel")));
 }
 
 void UGameOverMenu::SaveCurrentGame()

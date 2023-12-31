@@ -15,8 +15,6 @@ class TOWERDEFENCEGAME_API UTowerDefenceSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
-	UTowerDefenceSaveGame();
-
 	void EnableLevel2();
 
 	bool IsLevel2Availible()const;

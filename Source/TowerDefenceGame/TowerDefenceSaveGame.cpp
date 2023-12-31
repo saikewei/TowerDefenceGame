@@ -3,11 +3,6 @@
 
 #include "TowerDefenceSaveGame.h"
 
-UTowerDefenceSaveGame::UTowerDefenceSaveGame()
-{
-	//Level2Availible = true;
-	num = 6;
-}
 
 void UTowerDefenceSaveGame::EnableLevel2()
 {

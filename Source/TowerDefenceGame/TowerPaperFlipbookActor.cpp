@@ -16,6 +16,10 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	DetectionSphere->SetupAttachment(RootComponent);
 	DetectionSphere->SetSphereRadius(AttackRange);
 
+	ClickBox = CreateDefaultSubobject<USphereComponent>(TEXT("ClickBox"));
+	ClickBox->SetupAttachment(RootComponent);
+	ClickBox->SetSphereRadius(AttackRange);
+
 	//设置发射频率
 	FireRate = 0.2f; //每0.2秒发射一次
 
@@ -30,7 +34,7 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 
 	AttackRangeVisual = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("AttackRangeVisual"));
 	AttackRangeVisual->SetupAttachment(RootComponent);
-	AttackRangeVisual->SetVisibility(false); // 默认设置为不可见
+	AttackRangeVisual->SetVisibility(false); //默认设置为不可见
 
 	//初始化等级
 	CurrentLevel = 0;
@@ -51,9 +55,15 @@ ATowerPaperFlipbookActor::ATowerPaperFlipbookActor()
 	UpgradeAudioComponent->SetupAttachment(RootComponent);
 	UpgradeAudioComponent->bAutoActivate = false;
 
+	SellAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SellAudioComponent"));
+	SellAudioComponent->SetupAttachment(RootComponent);
+	SellAudioComponent->bAutoActivate = false;
+
 	IsVisible = false;
 	Menu = nullptr;
 	MyBase = nullptr;
+	HasTower = true;
+	SpawnDestroyAnimation = nullptr;
 }
 
 void ATowerPaperFlipbookActor::Tick(float DeltaTime)
@@ -65,9 +75,19 @@ void ATowerPaperFlipbookActor::Tick(float DeltaTime)
 void ATowerPaperFlipbookActor::BeginPlay()
 {
 	Super::BeginPlay();
+	//绑定触发事件
+	DetectionSphere->OnComponentBeginOverlap.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
+	DetectionSphere->OnComponentBeginOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange);
+	DetectionSphere->OnComponentEndOverlap.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
+	DetectionSphere->OnComponentEndOverlap.AddDynamic(this, &ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange);
+	TowerFlipbook->OnFinishedPlaying.RemoveDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
+	TowerFlipbook->OnFinishedPlaying.AddDynamic(this, &ATowerPaperFlipbookActor::OnAnimationFinished);
 	SetAttackRangeVisualScale();
 	//设置定时器以定期调用FireAtTarget
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_FireRate, this, &ATowerPaperFlipbookActor::FireAtTarget, FireRate, true);
+	//播放建造动画
+	TowerFlipbook->SetFlipbook(SpawnDestroyAnimation);
+	TowerFlipbook->SetLooping(false);
 }
 
 AMonsterPaperFlipbookActor* ATowerPaperFlipbookActor::ChooseTargetMonster()
@@ -181,15 +201,50 @@ void ATowerPaperFlipbookActor::UpgradeTower()
 
 void ATowerPaperFlipbookActor::SellTower()
 {
+	HasTower = false;
 	//返还金币
 	AToweDefenceGameState* GameState = GetWorld()->GetGameState<AToweDefenceGameState>();
 	GameState->AddMoney(SellCost[CurrentLevel]);
-	
+
+	//销毁碰撞组件
+	DetectionSphere->DestroyComponent();
+	ClickBox->DestroyComponent();
+
+	//播放售出音效
+	if (SellAudioComponent && SellAudioComponent->IsReadyForOwnerToAutoDestroy())
+	{
+		SellAudioComponent->Play();
+	}
+
 	//恢复塔基显示
 	MyBase->SetIsTower(false);
 
-	//销毁防御塔
-	this->Destroy();
+	SellAudioComponent->Play();
+	TowerFlipbook->SetFlipbook(SpawnDestroyAnimation);
+	TowerFlipbook->PlayFromStart();//播放后塔基即被销毁
+	TowerFlipbook->SetLooping(false);//确保动画不循环
+}
+
+void ATowerPaperFlipbookActor::OnMonsterEnterDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//检测并处理怪物的进入
+	AMonsterPaperFlipbookActor* MonsterActor = Cast<AMonsterPaperFlipbookActor>(OtherActor);
+	if (MonsterActor)
+	{
+		// 将怪物添加到列表中
+		MonstersInRange.AddUnique(MonsterActor);
+	}
+}
+
+void ATowerPaperFlipbookActor::OnMonsterLeaveDetectionRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	//处理怪物的离开
+	AMonsterPaperFlipbookActor* MonsterActor = Cast<AMonsterPaperFlipbookActor>(OtherActor);
+	if (MonsterActor)
+	{
+		// 将怪物从列表中移除
+		MonstersInRange.Remove(MonsterActor);
+	}
 }
 
 void ATowerPaperFlipbookActor::NotifyActorOnClicked(FKey ButtonPressed)
@@ -207,6 +262,18 @@ void ATowerPaperFlipbookActor::NotifyActorOnInputTouchBegin(const ETouchIndex::T
 {
 	//直接调用点击事件处理函数
 	NotifyActorOnClicked();
+}
+
+void ATowerPaperFlipbookActor::OnAnimationFinished()
+{
+	if (HasTower == false)
+	{
+		Destroy();
+	}
+	if (this)
+	{
+		TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
+	}
 }
 
 void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)
@@ -273,5 +340,4 @@ void ATowerPaperFlipbookActor::SetAttackRangeVisualScale()
 	FVector NewScale(ScaleFactor, ScaleFactor, ScaleFactor);
 	AttackRangeVisual->SetWorldScale3D(NewScale);
 }
-
 

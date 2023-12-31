@@ -14,7 +14,7 @@ ATShitBullet::ATShitBullet()
     }
 }
 
-void ATShitBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ATShitBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     // 检查是否击中怪物
     AMonsterPaperFlipbookActor* Monster = Cast<AMonsterPaperFlipbookActor>(OtherActor);
@@ -22,7 +22,7 @@ void ATShitBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
     {
         UE_LOG(LogTemp, Warning, TEXT("Hit!"));
         // 造成伤害
-        UGameplayStatics::ApplyDamage(Monster, BulletDamage, nullptr, this, DamageTypeClass);
+        Monster->GetDamage(BulletDamage);
 
         Decelerate(Monster);
 

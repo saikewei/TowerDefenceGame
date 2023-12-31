@@ -32,13 +32,5 @@ void UGameOverMenu::ClickExitBtn()
 
 void UGameOverMenu::SaveCurrentGame()
 {
-	UTowerDefenceSaveGame* SaveGameInstance = Cast<UTowerDefenceSaveGame>(UGameplayStatics::CreateSaveGameObject(UTowerDefenceSaveGame::StaticClass()));
 	
-	SaveGameInstance->EnableLevel2();
-
-	SaveGameInstance->num = 9;
-
-	bool isSuccess = UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("slot7"), 1);
-
-	UE_LOG(LogTemp, Warning, TEXT("save success!Result:%d"), isSuccess);
 }

@@ -270,10 +270,7 @@ void ATowerPaperFlipbookActor::OnAnimationFinished()
 	{
 		Destroy();
 	}
-	if (this)
-	{
-		TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
-	}
+	TowerFlipbook->SetFlipbook(TowerLevelsFlipbooks[CurrentLevel]);
 }
 
 void ATowerPaperFlipbookActor::SetSelfVisibility(bool Visible)

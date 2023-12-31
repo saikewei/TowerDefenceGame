@@ -15,12 +15,6 @@ class TOWERDEFENCEGAME_API UTowerDefenceSaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
-	void EnableLevel2();
-
-	bool IsLevel2Availible()const;
-
-	int32 num;
-
-protected:
+	UPROPERTY(BlueprintReadWrite)
 	bool Level2Availible;
 };

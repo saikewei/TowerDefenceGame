@@ -38,6 +38,10 @@ AMonsterPaperFlipbookActor::AMonsterPaperFlipbookActor()
 	MonsterAnimation = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("MonsterAnimation"));
 	MonsterAnimation->SetupAttachment(RootComponent);
 
+	StepShitAnimation = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("StepShitAnimation"));
+	StepShitAnimation->SetupAttachment(RootComponent);
+	StepShitAnimation->SetVisibility(false);
+
 	
 
 	MyPath = nullptr;
@@ -108,6 +112,7 @@ void AMonsterPaperFlipbookActor::GetDamage(float Damage)
 		}
 		MovingSpeed = 0.f;
 		SetHPBarMarkVisibility(false);
+		StepShitAnimation->SetVisibility(false);
 		//设置死亡倒计时，留一点时间播放动画
 		FTimerHandle animationTimer;
 		GetWorldTimerManager().SetTimer(animationTimer, this, &AMonsterPaperFlipbookActor::Die, .3f, false);

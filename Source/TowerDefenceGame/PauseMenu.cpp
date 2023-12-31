@@ -30,8 +30,6 @@ void UPauseMenu::NativeConstruct()
 
 void UPauseMenu::ClickResumeBtn()
 {
-	static ConstructorHelpers::FObjectFinder<USoundBase> Soundf(TEXT("/Game/GuardCarrot/sound/__MenuSelect"));
-	UGameplayStatics::PlaySound2D(GetWorld(), Soundf.Object);
 	//如果此前游戏没有暂停，则恢复游戏
 	if (!IsGamePausedBefore)
 	{
@@ -56,5 +54,5 @@ void UPauseMenu::ClickRestartBtn()
 void UPauseMenu::ClickExitBtn()
 {
 	//回到主菜单
-	UGameplayStatics::OpenLevel(GetWorld(), NameOfMainLevel);
+	UGameplayStatics::OpenLevel(GetWorld(), FName(FString("MenuLevel")));
 }

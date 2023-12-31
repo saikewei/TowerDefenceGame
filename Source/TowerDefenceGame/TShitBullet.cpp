@@ -36,6 +36,7 @@ void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
     // 给怪物减速
     float OriginalSpeed = Monster->OriginalSpeed;
     Monster->MovingSpeed = OriginalSpeed / 2;
+    Monster->StepShitAnimation->SetVisibility(true);
 
     // 设置定时器恢复速度
     FTimerHandle ShitTimerHandle;
@@ -45,6 +46,7 @@ void ATShitBullet::Decelerate(AMonsterPaperFlipbookActor* Monster)
             if (Monster)
             {
                 Monster->MovingSpeed = OriginalSpeed;
+                Monster->StepShitAnimation->SetVisibility(false);
             }
         });
     GetWorld()->GetTimerManager().SetTimer(ShitTimerHandle, TimerDelegate, DecerlerationTime, false);

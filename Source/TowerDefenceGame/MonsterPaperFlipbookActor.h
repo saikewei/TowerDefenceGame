@@ -117,6 +117,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UPaperFlipbookComponent* DeathAnimation;
 
+	//踩屎动画
+	UPROPERTY(EditAnywhere)
+	UPaperFlipbookComponent* StepShitAnimation;
+
 	//怪物外观
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperFlipbookComponent* MonsterAnimation;

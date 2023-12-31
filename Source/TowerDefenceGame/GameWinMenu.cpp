@@ -12,10 +12,6 @@ void UGameWinMenu::NativeConstruct()
 	{
 		RestartBtn->SetIsEnabled(false);
 	}
-	else
-	{
-		SaveCurrentGame();
-	}
 }
 
 void UGameWinMenu::ClickRestartBtn()

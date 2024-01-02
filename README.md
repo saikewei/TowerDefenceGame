@@ -9,7 +9,7 @@ TowerDefenceGame
 |---|---|---|---|---|
 |黄毅成（组长）|2252634|怪物行为、动画实现<br>怪物生成逻辑实现<br>怪物波次实现<br>HUD实现<br>暂停、结束菜单实现<br>倍速、暂停功能实现<br>存档功能实现<br>索敌功能实现<br>障碍物实现<br>Android环境配置|CountdownFlipbookActor<br>GameHUD<br>GameOverMenu<br>GameWinMenu<br>HPBarWidget<br>MainMenuGameModeBase<br>MonsterPaperFlipbookActor<br>ObstaclePaperFlipbookActor<br>PauseMenu<br>SplinePathActor<br>TowerDefenceGameState<br>TowerDefenceGameModeBase<br>TowerDefenceSaveGame|-|
 |张扬|2253722|防御塔功能实现<br>塔基功能实现<br>防御塔子弹功能实现<br>防御塔建造UI与升级出售UI|TowerpaperFlipbookActor<br>TowerBase<br>Bullet<br>TBottle<br>TBottleBullet<br>TShit<br>TShitBullet<br>TFan<Br>TFanBullet<br>BuildMenu<br>UpgradeSellMenu|-|
-|奥泉瑞|2250695|-|-|-|
+|奥泉瑞|2250695|游戏初始界面的UI设计<br>关卡选择界面的UI设计<br>ABOUT页面的设计<br>萝卜形象的设计及显示<br>萝卜血量的变化及显示<br>萝卜技能的实现|Carrot<br>UpgradeCarrotMenu|-|
 ## 项目实现功能
 ### 基础功能
 * 支持3种防御塔和防御塔的删除
